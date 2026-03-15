@@ -578,7 +578,7 @@ const StoryView = ({ onScroll }: { onScroll: (event: any) => void }) => {
                                 <Pressable
                                     style={styles.mapButton}
                                     onPress={() => {
-                                        const query = encodeURIComponent("Calle La Vega, Chiclana de la Frontera");
+                                        const query = encodeURIComponent("Av. de la Barrosa, local 2, 11139 Chiclana de la Frontera, Cádiz");
                                         const url = `https://www.google.com/maps/search/?api=1&query=${query}`;
                                         Linking.openURL(url);
                                     }}
