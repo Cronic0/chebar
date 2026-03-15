@@ -59,7 +59,7 @@ export const HorizontalProductCard = ({ item, index }: HorizontalProductCardProp
                     <View style={styles.contentContainer}>
                         <View style={styles.headerRow}>
                             <Text style={styles.title} numberOfLines={1}>{translated.title}</Text>
-                            <Text style={styles.price}>{item.price.toFixed(2)}€</Text>
+                            <Text style={styles.price}>{item.formats && item.formats.length > 0 ? `Desde ${item.formats[0].price.toFixed(2)}€` : `${item.price.toFixed(2)}€`}</Text>
                         </View>
 
                         <Text style={styles.description} numberOfLines={2}>

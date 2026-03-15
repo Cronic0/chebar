@@ -465,6 +465,7 @@ export function AdminProvider({ children }: { children: ReactNode }) {
                     is_banner: false,
                     is_offer: false,
                     translations: item.translations,
+                    formats: item.formats,
                 };
                 await supabaseCreateProduct(supabaseItem as any);
             }
