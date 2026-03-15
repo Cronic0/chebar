@@ -1,0 +1,1816 @@
+import { HorizontalProductCard } from '@/components/HorizontalProductCard';
+import { Colors, LightColors, Spacing, Typography } from '@/constants/Theme';
+import { useAdmin } from '@/context/AdminContext';
+import { useLanguage } from '@/context/LanguageContext';
+import { CATEGORIES } from '@/data/menuData';
+import { getTranslatedProduct } from '@/utils/productTranslation';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
+import { Link, useNavigation } from 'expo-router';
+import { useEffect, useRef, useState } from 'react';
+import { ActivityIndicator, Alert, Dimensions, Image, ImageBackground, Linking, Modal, Platform, Pressable, FlatList as RNFlatList, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import Animated, { FadeInRight, useAnimatedStyle, useSharedValue, withSpring, withTiming } from 'react-native-reanimated';
+
+const RecommendationCard = ({ item, index = 0 }: { item: any, index?: number }) => {
+    const { t, language } = useLanguage();
+    const translated = getTranslatedProduct(item, language);
+
+    if (!item || !item.id) return null;
+
+    return (
+        <Link href={`/menu/${item.id}` as any} asChild>
+            <Pressable>
+                <Animated.View
+                    entering={FadeInRight.delay(index * 100).springify()}
+                    style={styles.recommendationCard}
+                >
+                    <Image
+                        source={{ uri: item.image }}
+                        style={[
+                            styles.recommendationImage,
+                            item.available === false && styles.imageUnavailable
+                        ]}
+                    />
+                    {/* Unavailable Overlay */}
+                    {item.available === false && (
+                        <View style={styles.unavailableOverlay} />
+                    )}
+                    {item.isNew && (
+                        <LinearGradient
+                            colors={[Colors.secondary, Colors.secondaryDark]}
+                            start={{ x: 0, y: 0 }}
+                            end={{ x: 1, y: 1 }}
+                            style={styles.newBadge}
+                        >
+                            <Text style={styles.newBadgeText}>NUEVO</Text>
+                        </LinearGradient>
+                    )}
+                    {item.available === false && (
+                        <View style={styles.unavailableBadge}>
+                            <Text style={styles.unavailableBadgeText}>No disponible</Text>
+                        </View>
+                    )}
+                    {item.isOffMenu && (
+                        <LinearGradient
+                            colors={[Colors.primary, Colors.primaryDark]}
+                            start={{ x: 0, y: 0 }}
+                            end={{ x: 1, y: 1 }}
+                            style={styles.offMenuBadge}
+                        >
+                            <Text style={styles.offMenuBadgeText}>Fuera de Carta</Text>
+                        </LinearGradient>
+                    )}
+                    <View style={styles.recommendationContent}>
+                        <Text style={styles.recommendationTitle} numberOfLines={1}>{translated.title}</Text>
+                        <Text style={styles.recommendationPrice}>{item.price.toFixed(2)}€</Text>
+                    </View>
+                </Animated.View>
+            </Pressable>
+        </Link>
+    );
+};
+
+const NewsletterSection = () => {
+    const [email, setEmail] = useState('');
+    const [accepted, setAccepted] = useState(false);
+    const [isSubmitted, setIsSubmitted] = useState(false);
+    const { addSubscriber } = useAdmin();
+    const { t } = useLanguage();
+
+    const handleSubscribe = () => {
+        if (!email || !email.includes('@')) {
+            Alert.alert('Error', 'Por favor introduce un email válido');
+            return;
+        }
+        if (!accepted) {
+            Alert.alert('Error', 'Debes aceptar las condiciones');
+            return;
+        }
+
+        addSubscriber(email);
+        setIsSubmitted(true);
+        setEmail('');
+        setAccepted(false);
+
+        // Reset after 5 seconds so they can see the form again if needed
+        setTimeout(() => setIsSubmitted(false), 5000);
+    };
+
+    return (
+        <View style={styles.newsletterContainer}>
+            <LinearGradient
+                colors={['rgba(252, 1, 3, 0.1)', 'rgba(252, 1, 3, 0.05)']}
+                style={styles.newsletterGradient}
+            >
+                {isSubmitted ? (
+                    <View style={styles.successContainer}>
+                        <View style={styles.successIconCircle}>
+                            <MaterialCommunityIcons name="check" size={40} color="#FFF" />
+                        </View>
+                        <Text style={styles.successTitle}>¡Gracias por suscribirte!</Text>
+                        <Text style={styles.successSubtitle}>
+                            Te hemos añadido a nuestra lista. Pronto recibirás noticias nuestras.
+                        </Text>
+                    </View>
+                ) : (
+                    <>
+                        <MaterialCommunityIcons name="email-newsletter" size={40} color={Colors.primary} style={{ marginBottom: 12 }} />
+                        <Text style={styles.newsletterTitle}>¡Únete a nuestra comunidad!</Text>
+                        <Text style={styles.newsletterSubtitle}>
+                            Recibe nuestras novedades, eventos especiales y promociones exclusivas directamente en tu email.
+                        </Text>
+
+                        <View style={styles.inputContainer}>
+                            <MaterialCommunityIcons name="email-outline" size={20} color={Colors.textSecondary} style={styles.inputIcon} />
+                            <TextInput
+                                style={styles.input}
+                                placeholder="Tu correo electrónico"
+                                placeholderTextColor={Colors.textSecondary}
+                                value={email}
+                                onChangeText={setEmail}
+                                keyboardType="email-address"
+                                autoCapitalize="none"
+                            />
+                        </View>
+
+                        <Pressable style={styles.checkboxContainer} onPress={() => setAccepted(!accepted)}>
+                            <MaterialCommunityIcons
+                                name={accepted ? "checkbox-marked" : "checkbox-blank-outline"}
+                                size={24}
+                                color={accepted ? Colors.primary : Colors.textSecondary}
+                            />
+                            <Text style={styles.checkboxText}>
+                                He leído y acepto la política de privacidad y condiciones de uso.
+                            </Text>
+                        </Pressable>
+
+                        <Pressable style={styles.subscribeButton} onPress={handleSubscribe}>
+                            <Text style={styles.subscribeButtonText}>Suscribirme</Text>
+                        </Pressable>
+                    </>
+                )}
+            </LinearGradient>
+        </View>
+    );
+};
+
+const ScheduleModal = ({ visible, onClose }: { visible: boolean; onClose: () => void }) => {
+    const { t } = useLanguage();
+    const { schedule } = useAdmin();
+
+    const jsDayToKey = [
+        'sunday',    // 0
+        'monday',    // 1
+        'tuesday',   // 2
+        'wednesday', // 3
+        'thursday',  // 4
+        'friday',    // 5
+        'saturday'   // 6
+    ];
+
+    return (
+        <Modal
+            animationType="fade"
+            transparent={true}
+            visible={visible}
+            onRequestClose={onClose}
+        >
+            <Pressable style={styles.modalOverlay} onPress={onClose}>
+                <Pressable style={styles.modalContent} onPress={e => e.stopPropagation()}>
+                    <View style={styles.modalHeader}>
+                        <MaterialCommunityIcons name="clock-outline" size={28} color={Colors.primary} />
+                        <Text style={styles.modalTitle}>{t('scheduleTitle')}</Text>
+                    </View>
+
+                    <View style={styles.scheduleList}>
+                        {['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'].map((dayKey) => {
+                            const daySchedule = schedule[dayKey];
+                            const hours = daySchedule?.isOpen
+                                ? `${daySchedule.openTime} - ${daySchedule.closeTime}`
+                                : t('closed');
+
+                            // Check if it is today
+                            const currentJsDay = new Date().getDay();
+                            const todayKey = jsDayToKey[currentJsDay];
+                            const isToday = dayKey === todayKey;
+                            const isClosed = !daySchedule?.isOpen;
+
+                            return (
+                                <View key={dayKey} style={[styles.scheduleRow, isToday && styles.scheduleRowToday]}>
+                                    <Text style={[styles.dayName, isToday && styles.dayNameToday]}>
+                                        {t(dayKey as any)}
+                                    </Text>
+                                    <Text style={[styles.hoursText, isToday && styles.hoursTextToday, isClosed && styles.closedText]}>
+                                        {hours}
+                                    </Text>
+                                    {isToday && (
+                                        <View style={styles.todayBadge}>
+                                            <Text style={styles.todayBadgeText}>{t('today')}</Text>
+                                        </View>
+                                    )}
+                                </View>
+                            );
+                        })}
+                    </View>
+
+                    <TouchableOpacity style={styles.closeButton} onPress={onClose}>
+                        <Text style={styles.closeButtonText}>{t('back')}</Text>
+                    </TouchableOpacity>
+                </Pressable>
+            </Pressable>
+        </Modal>
+    );
+};
+
+const AutoScrollCarousel = ({
+    data,
+    renderItem,
+    autoScroll,
+    scrollSpeed,
+    itemWidth = 220,
+    contentContainerStyle
+}: {
+    data: any[],
+    renderItem: (item: any) => React.ReactNode,
+    autoScroll: boolean,
+    scrollSpeed: number,
+    itemWidth?: number,
+    contentContainerStyle?: any
+}) => {
+    const scrollViewRef = useRef<ScrollView>(null);
+    const scrollX = useRef(0);
+    const [isManualScrolling, setIsManualScrolling] = useState(false);
+    const animationFrameId = useRef<number | null>(null);
+
+    // Duplicate data for infinite scroll illusion
+    const extendedData = [...data, ...data, ...data, ...data];
+
+    useEffect(() => {
+        if (autoScroll && !isManualScrolling && data.length > 0) {
+            const startAnimation = () => {
+                const velocity = 2000 / scrollSpeed;
+
+                scrollX.current += velocity;
+
+                // Reset logic for infinite scroll
+                const singleSetWidth = data.length * itemWidth;
+                if (scrollX.current >= singleSetWidth) {
+                    scrollX.current = scrollX.current - singleSetWidth;
+                    scrollViewRef.current?.scrollTo({ x: scrollX.current, animated: false });
+                } else {
+                    scrollViewRef.current?.scrollTo({ x: scrollX.current, animated: false });
+                }
+
+                animationFrameId.current = requestAnimationFrame(startAnimation);
+            };
+
+            animationFrameId.current = requestAnimationFrame(startAnimation);
+        }
+
+        return () => {
+            if (animationFrameId.current) {
+                cancelAnimationFrame(animationFrameId.current);
+            }
+        };
+    }, [autoScroll, scrollSpeed, data.length, isManualScrolling]);
+
+    return (
+        <ScrollView
+            ref={scrollViewRef}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={contentContainerStyle}
+            decelerationRate="fast"
+            pagingEnabled={false}
+            nestedScrollEnabled={true}
+            onTouchStart={() => {
+                // Stop auto-scroll immediately when user touches
+                setIsManualScrolling(true);
+                if (animationFrameId.current) cancelAnimationFrame(animationFrameId.current);
+            }}
+            onTouchEnd={() => {
+                // Resume auto-scroll after a delay when user stops touching
+                setTimeout(() => setIsManualScrolling(false), 2000);
+            }}
+            onScrollBeginDrag={() => {
+                setIsManualScrolling(true);
+                if (animationFrameId.current) cancelAnimationFrame(animationFrameId.current);
+            }}
+            onScrollEndDrag={() => {
+                // Don't resume immediately, wait a bit
+                setTimeout(() => setIsManualScrolling(false), 2000);
+            }}
+            onMomentumScrollEnd={() => {
+                // Don't resume immediately, wait a bit
+                setTimeout(() => setIsManualScrolling(false), 2000);
+            }}
+            onScroll={(e) => {
+                if (isManualScrolling) {
+                    scrollX.current = e.nativeEvent.contentOffset.x;
+                }
+            }}
+            scrollEventThrottle={16}
+            directionalLockEnabled={false}
+        >
+            {extendedData.map((item, index) => (
+                <View key={`${item.id}-${index}`} style={{ width: itemWidth }}>
+                    {renderItem(item)}
+                </View>
+            ))}
+        </ScrollView>
+    );
+};
+
+const StoryView = ({ onScroll }: { onScroll: (event: any) => void }) => {
+    const { t } = useLanguage();
+    const { products, showRecommendations, showOffMenu, showTunaWeek, showBannerCarousel, bannerConfig, showEvent, eventConfig, schedule, sectionOrder, showAllergens, sectionsSettings } = useAdmin();
+    const bannerItems = products.filter(item => item.isBanner);
+    const recommendations = products.filter(item => item.isRecommendation);
+    const offMenuItems = products.filter(item => item.isOffMenu);
+    const [showSchedule, setShowSchedule] = useState(false);
+    const navigation = useNavigation();
+
+    const getTodayHours = () => {
+        const day = new Date().getDay();
+        const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+        const dayKey = days[day];
+
+        const todaySchedule = schedule[dayKey];
+        if (!todaySchedule || !todaySchedule.isOpen) {
+            return `${t('today')}: ${t('closed')}`;
+        }
+        return `${t('today')}: ${todaySchedule.openTime} - ${todaySchedule.closeTime}`;
+    };
+
+    return (
+        <ScrollView
+            contentContainerStyle={styles.storyContainer}
+            showsVerticalScrollIndicator={false}
+            onScroll={onScroll}
+            scrollEventThrottle={16}
+        >
+            <ImageBackground
+                source={{ uri: 'https://images.unsplash.com/photo-1514316703755-dcaac27c2845?q=80&w=1000&auto=format&fit=crop' }}
+                style={styles.heroContainer}
+            >
+                <LinearGradient
+                    colors={['transparent', 'rgba(0,0,0,0.6)']}
+                    style={styles.heroGradient}
+                >
+                    <View style={styles.heroContent}>
+                        <Image source={require('@/assets/logo.png')} style={styles.heroLogo} />
+                        <Text style={styles.heroTitle}>{t('storyHeroTitle')}</Text>
+                        <Text style={styles.heroSubtitle}>{t('storyHeroSubtitle')}</Text>
+                    </View>
+                </LinearGradient>
+            </ImageBackground>
+
+            <View style={styles.storySheet}>
+                <View style={[styles.sectionContainer, { marginTop: Spacing.l }]}>
+                    <Text style={styles.storyText}>
+                        {t('storyText')}
+                    </Text>
+                </View>
+
+                {/* Dynamic Sections */}
+                {sectionOrder.map((sectionId) => {
+                    switch (sectionId) {
+                        case 'banner':
+                            return showTunaWeek && bannerItems.length > 0 ? (
+                                <View key={sectionId} style={styles.sectionContainer}>
+                                    {bannerConfig.linkPath ? (
+                                        <Link href={bannerConfig.linkPath as any} asChild>
+                                            <Pressable>
+                                                <ImageBackground
+                                                    source={{ uri: bannerConfig.imageUrl }}
+                                                    style={styles.tunaBanner}
+                                                    imageStyle={{ borderRadius: 16 }}
+                                                >
+                                                    <LinearGradient
+                                                        colors={[`rgba(255,255,255,${bannerConfig.whiteOverlayOpacity ?? 0})`, `rgba(0,0,0,${bannerConfig.darkOverlayOpacity ?? 0.7})`]}
+                                                        style={styles.tunaBannerOverlay}
+                                                    >
+                                                        <Text style={styles.tunaBannerTitle}>{bannerConfig.title}</Text>
+                                                        <Text style={styles.tunaBannerSubtitle}>{bannerConfig.subtitle}</Text>
+                                                    </LinearGradient>
+                                                </ImageBackground>
+                                            </Pressable>
+                                        </Link>
+                                    ) : (
+                                        <Pressable>
+                                            <ImageBackground
+                                                source={{ uri: bannerConfig.imageUrl }}
+                                                style={styles.tunaBanner}
+                                                imageStyle={{ borderRadius: 16 }}
+                                            >
+                                                <LinearGradient
+                                                    colors={[`rgba(255,255,255,${bannerConfig.whiteOverlayOpacity ?? 0})`, `rgba(0,0,0,${bannerConfig.darkOverlayOpacity ?? 0.7})`]}
+                                                    style={styles.tunaBannerOverlay}
+                                                >
+                                                    <Text style={styles.tunaBannerTitle}>{bannerConfig.title}</Text>
+                                                    <Text style={styles.tunaBannerSubtitle}>{bannerConfig.subtitle}</Text>
+                                                </LinearGradient>
+                                            </ImageBackground>
+                                        </Pressable>
+                                    )}
+
+                                    {/* Banner Carousel */}
+                                    {showBannerCarousel && (
+                                        <ScrollView
+                                            horizontal
+                                            showsHorizontalScrollIndicator={false}
+                                            contentContainerStyle={[styles.recommendationsList, { marginTop: Spacing.m }]}
+                                            snapToInterval={220}
+                                            decelerationRate="fast"
+                                            nestedScrollEnabled={true}
+                                            directionalLockEnabled={false}
+                                        >
+                                            {bannerItems.map((item) => (
+                                                <RecommendationCard key={item.id} item={item} />
+                                            ))}
+                                        </ScrollView>
+                                    )}
+                                </View>
+                            ) : null;
+
+                        case 'event':
+                            return showEvent ? (
+                                <View key={sectionId} style={styles.sectionContainer}>
+                                    {eventConfig.linkPath ? (
+                                        <Link href={eventConfig.linkPath as any} asChild>
+                                            <Pressable>
+                                                <ImageBackground
+                                                    source={{ uri: eventConfig.imageUrl }}
+                                                    style={styles.tunaBanner}
+                                                    imageStyle={{ borderRadius: 16 }}
+                                                >
+                                                    <LinearGradient
+                                                        colors={[`rgba(255,255,255,${eventConfig.whiteOverlayOpacity ?? 0})`, `rgba(0,0,0,${eventConfig.darkOverlayOpacity ?? 0.7})`]}
+                                                        style={styles.tunaBannerOverlay}
+                                                    >
+                                                        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+                                                            <MaterialCommunityIcons name="calendar-star" size={20} color={Colors.secondary} />
+                                                            <Text style={[styles.tunaBannerSubtitle, { color: Colors.secondary, fontWeight: 'bold' }]}>
+                                                                {eventConfig.date}
+                                                            </Text>
+                                                        </View>
+                                                        <Text style={styles.tunaBannerTitle}>{eventConfig.title}</Text>
+                                                        <Text style={styles.tunaBannerSubtitle}>{eventConfig.subtitle}</Text>
+                                                    </LinearGradient>
+                                                </ImageBackground>
+                                            </Pressable>
+                                        </Link>
+                                    ) : (
+                                        <Pressable>
+                                            <ImageBackground
+                                                source={{ uri: eventConfig.imageUrl }}
+                                                style={styles.tunaBanner}
+                                                imageStyle={{ borderRadius: 16 }}
+                                            >
+                                                <LinearGradient
+                                                    colors={[`rgba(255,255,255,${eventConfig.whiteOverlayOpacity ?? 0})`, `rgba(0,0,0,${eventConfig.darkOverlayOpacity ?? 0.7})`]}
+                                                    style={styles.tunaBannerOverlay}
+                                                >
+                                                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+                                                        <MaterialCommunityIcons name="calendar-star" size={20} color={Colors.secondary} />
+                                                        <Text style={[styles.tunaBannerSubtitle, { color: Colors.secondary, fontWeight: 'bold' }]}>
+                                                            {eventConfig.date}
+                                                        </Text>
+                                                    </View>
+                                                    <Text style={styles.tunaBannerTitle}>{eventConfig.title}</Text>
+                                                    <Text style={styles.tunaBannerSubtitle}>{eventConfig.subtitle}</Text>
+                                                </LinearGradient>
+                                            </ImageBackground>
+                                        </Pressable>
+                                    )}
+                                </View>
+                            ) : null;
+
+                        case 'allergens':
+                            return showAllergens ? (
+                                <View key={sectionId} style={styles.sectionContainer}>
+                                    <Text style={styles.allergenInfoText}>
+                                        {t('allergenInfoText')}
+                                    </Text>
+                                    <Link href="/allergens" asChild>
+                                        <Pressable style={styles.allergenBanner}>
+                                            <View style={styles.allergenBannerContent}>
+                                                <MaterialCommunityIcons name="shield-check-outline" size={24} color={Colors.primary} />
+                                                <View style={{ marginLeft: 12 }}>
+                                                    <Text style={styles.allergenBannerTitle}>{t('allergenFilterTitle')}</Text>
+                                                    <Text style={styles.allergenBannerSubtitle}>{t('allergenFilterSub')}</Text>
+                                                </View>
+                                            </View>
+                                            <MaterialCommunityIcons name="chevron-right" size={24} color={Colors.textSecondary} />
+                                        </Pressable>
+                                    </Link>
+                                </View>
+                            ) : null;
+
+                        case 'recommendations': {
+                            const settings = sectionsSettings['recommendations'] || { showTitle: true, autoScroll: false, scrollSpeed: 3000 };
+                            return showRecommendations && recommendations.length > 0 ? (
+                                <View key={sectionId} style={styles.sectionContainer}>
+                                    {settings.showTitle && (
+                                        <Text style={styles.sectionTitle}>
+                                            {settings.customTitle || t('chefRecommendations')}
+                                        </Text>
+                                    )}
+                                    <AutoScrollCarousel
+                                        data={recommendations}
+                                        renderItem={(item) => <RecommendationCard key={item.id} item={item} />}
+                                        autoScroll={settings.autoScroll}
+                                        scrollSpeed={settings.scrollSpeed}
+                                        contentContainerStyle={{ ...styles.recommendationsList, gap: 12 }}
+                                        itemWidth={232}
+                                    />
+                                </View>
+                            ) : null;
+                        }
+
+                        case 'offmenu': {
+                            const settings = sectionsSettings['offmenu'] || { showTitle: true, showDescription: true, autoScroll: false, scrollSpeed: 3000 };
+                            return showOffMenu && offMenuItems.length > 0 ? (
+                                <View key={sectionId} style={styles.sectionContainer}>
+                                    {settings.showTitle && (
+                                        <Text style={styles.sectionTitle}>
+                                            {settings.customTitle || 'Fuera de Carta'}
+                                        </Text>
+                                    )}
+                                    {settings.showDescription && (
+                                        <Text style={styles.offMenuIntro}>
+                                            Platos especiales que no encontrarás en nuestra carta habitual. Creaciones únicas del chef disponibles por tiempo limitado.
+                                        </Text>
+                                    )}
+                                    <AutoScrollCarousel
+                                        data={offMenuItems}
+                                        renderItem={(item) => <RecommendationCard key={item.id} item={item} />}
+                                        autoScroll={settings.autoScroll}
+                                        scrollSpeed={settings.scrollSpeed}
+                                        contentContainerStyle={{ ...styles.recommendationsList, gap: 12 }}
+                                        itemWidth={232}
+                                    />
+                                </View>
+                            ) : null;
+                        }
+
+                        default:
+                            return null;
+                    }
+                })}
+
+                {/* Info Section */}
+                <View style={styles.infoContainer}>
+                    <Text style={styles.infoTitle}>{t('infoTitle')}</Text>
+
+                    <View style={styles.widgetsGrid}>
+                        {/* Map Widget */}
+                        <View style={styles.mapWidget}>
+                            <Image
+                                source={require('@/assets/images/location_map.png')}
+                                style={styles.mapImage}
+                            />
+                            <View style={styles.mapOverlay}>
+                                <View style={styles.mapContent}>
+                                    <MaterialCommunityIcons name="map-marker" size={24} color={Colors.primary} />
+                                    <Text style={styles.mapAddress}>{t('location')}</Text>
+                                </View>
+                                <Pressable
+                                    style={styles.mapButton}
+                                    onPress={() => {
+                                        const query = encodeURIComponent("Calle La Vega, Chiclana de la Frontera");
+                                        const url = `https://www.google.com/maps/search/?api=1&query=${query}`;
+                                        Linking.openURL(url);
+                                    }}
+                                >
+                                    <Text style={styles.mapButtonText}>{t('Como llegar' as any)}</Text>
+                                    <MaterialCommunityIcons name="arrow-right" size={16} color="#FFF" />
+                                </Pressable>
+                            </View>
+                        </View>
+
+                        <View style={styles.rowWidgets}>
+                            {/* Hours Widget */}
+                            <Pressable style={styles.infoWidget} onPress={() => setShowSchedule(true)}>
+                                <View style={styles.iconCircle}>
+                                    <MaterialCommunityIcons name="clock-outline" size={24} color={Colors.primary} />
+                                </View>
+                                <View style={{ alignItems: 'center', gap: 4 }}>
+                                    <Text style={styles.widgetLabel}>{t('scheduleTitle')}</Text>
+                                    <Text style={{ fontSize: 12, color: Colors.textSecondary, fontWeight: '600' }}>
+                                        {getTodayHours()}
+                                    </Text>
+                                </View>
+                            </Pressable>
+
+                            {/* Contact Widget */}
+                            <Pressable style={styles.infoWidget}>
+                                <View style={styles.iconCircle}>
+                                    <MaterialCommunityIcons name="phone" size={24} color={Colors.primary} />
+                                </View>
+                                <View style={{ alignItems: 'center', gap: 4 }}>
+                                    <Text style={styles.widgetLabel}>{t('reservations')}</Text>
+                                    <Text style={{ fontSize: 11, color: Colors.textSecondary, fontWeight: '500' }}>
+                                        info@eltrebol.com
+                                    </Text>
+                                </View>
+                            </Pressable>
+                        </View>
+                    </View>
+                </View>
+
+                <NewsletterSection />
+
+                <View style={styles.signatureContainer}>
+                    <Text style={styles.signature}>{t('familySignature')}</Text>
+                </View>
+
+                <View style={styles.footerContainer}>
+                    <Link href="/gastrocode" asChild>
+                        <Pressable>
+                            <Text style={styles.footerText}>Powered by GastroCode</Text>
+                        </Pressable>
+                    </Link>
+                </View>
+            </View>
+            <ScheduleModal visible={showSchedule} onClose={() => setShowSchedule(false)} />
+        </ScrollView >
+    );
+};
+
+// Helper function to get category background image
+const getCategoryImage = (categoryId: string): string => {
+    const categoryImages: { [key: string]: string } = {
+        'entrantes': 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?q=80&w=1000&auto=format&fit=crop',
+        'principales': 'https://images.unsplash.com/photo-1600891964092-4316c288032e?q=80&w=1000&auto=format&fit=crop',
+        'postres': 'https://images.unsplash.com/photo-1551024506-0bccd828d307?q=80&w=1000&auto=format&fit=crop',
+        'vinos': 'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?q=80&w=1000&auto=format&fit=crop',
+        'bebidas': 'https://images.unsplash.com/photo-1514933651103-005eec06c04b?q=80&w=1000&auto=format&fit=crop',
+        'semana-atun': 'https://images.unsplash.com/photo-1611250188496-e966043a0629?q=80&w=1000&auto=format&fit=crop',
+    };
+    return categoryImages[categoryId] || categoryImages['principales'];
+};
+
+export default function MenuScreen() {
+    const [activeCategory, setActiveCategory] = useState('el-trebol');
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const navigation = useNavigation();
+    const { t, language } = useLanguage();
+
+    const { products, isLoading } = useAdmin();
+    const scrollViewRef = useRef<ScrollView>(null);
+
+    // FAB animation
+    const fabOpacity = useSharedValue(0);
+    const fabScale = useSharedValue(0.8);
+
+    useEffect(() => {
+        navigation.setOptions({ title: t('menuTitle') });
+    }, [t, navigation]);
+
+    // Auto-scroll to active category
+    useEffect(() => {
+        const index = CATEGORIES.findIndex((cat) => cat.id === activeCategory);
+        if (index !== -1 && scrollViewRef.current) {
+            // Scroll to position: each tab is ~80px wide
+            scrollViewRef.current.scrollTo({ x: index * 80, animated: true });
+        }
+    }, [activeCategory]);
+
+    // Handle scroll for both header and FAB visibility
+    const handleScroll = (event: any) => {
+        const scrollY = event.nativeEvent.contentOffset.y;
+        const HERO_HEIGHT = 300; // Height threshold
+
+        if (scrollY > HERO_HEIGHT) {
+            navigation.setOptions({ headerShown: false });
+            fabOpacity.value = withTiming(1, { duration: 300 });
+            fabScale.value = withSpring(1);
+        } else {
+            navigation.setOptions({ headerShown: true });
+            fabOpacity.value = withTiming(0, { duration: 300 });
+            fabScale.value = withSpring(0.8);
+        }
+    };
+
+    const fabAnimatedStyle = useAnimatedStyle(() => {
+        return {
+            opacity: fabOpacity.value,
+            transform: [{ scale: fabScale.value }],
+        };
+    });
+
+    if (isLoading) {
+        return (
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: Colors.background }}>
+                <Image source={require('@/assets/logo.png')} style={{ width: 120, height: 120, marginBottom: 16, resizeMode: 'contain' }} />
+                <ActivityIndicator size="large" color={Colors.primary} />
+                <Text style={{ marginTop: 16, color: Colors.textSecondary, fontFamily: 'Inter_400Regular' }}>
+                    Cargando carta...
+                </Text>
+            </View>
+        );
+    }
+
+    const filteredItems = products.filter(
+        (item) => item.category === activeCategory
+    );
+
+    const renderItem = ({ item, index }: { item: any, index: number }) => (
+        <HorizontalProductCard item={item} index={index} />
+    );
+
+    return (
+        <View style={styles.container}>
+            <ImageBackground
+                source={require('@/assets/fla.jpg')}
+                style={styles.background}
+                resizeMode="cover"
+            >
+                {activeCategory === 'el-trebol' ? (
+                    <StoryView key={language} onScroll={handleScroll} />
+                ) : (
+                    <>
+                        {/* Immersive Category Hero (Fixed Background) */}
+                        <View style={styles.immersiveHeader}>
+                            <ImageBackground
+                                source={{ uri: getCategoryImage(activeCategory) }}
+                                style={styles.immersiveHeroImage}
+                                resizeMode="cover"
+                            >
+                                <LinearGradient
+                                    colors={['rgba(0,0,0,0.3)', 'rgba(15, 23, 42, 0.8)']}
+                                    style={styles.immersiveGradient}
+                                />
+                                <View style={styles.immersiveTitleContainer}>
+                                    <MaterialCommunityIcons
+                                        name={CATEGORIES.find(cat => cat.id === activeCategory)?.icon as any}
+                                        size={40}
+                                        color="#FFF"
+                                        style={{ marginBottom: 8 }}
+                                    />
+                                    <Text style={styles.immersiveTitle}>
+                                        {CATEGORIES.find(cat => cat.id === activeCategory)?.title}
+                                    </Text>
+                                    <Text style={styles.immersiveSubtitle}>
+                                        Explora nuestra selección
+                                    </Text>
+                                </View>
+                            </ImageBackground>
+                        </View>
+
+                        {/* Sheet Container (Scrollable) */}
+                        <View style={styles.sheetContainer}>
+                            <RNFlatList
+                                key={activeCategory}
+                                data={filteredItems}
+                                extraData={language}
+                                keyExtractor={(item, index) => `${item.id}-${index}`}
+                                renderItem={renderItem}
+                                contentContainerStyle={styles.listContent}
+                                showsVerticalScrollIndicator={false}
+                                ItemSeparatorComponent={() => <View style={styles.separator} />}
+                            />
+                        </View>
+                    </>
+                )}
+
+                {/* Floating Category Selector */}
+                {/* Floating Category Selector - FAB Style */}
+                <View style={styles.floatingSelectorContainer}>
+                    {/* Menu Items (Horizontal List) */}
+                    {isMenuOpen && (
+                        <Animated.View
+                            entering={FadeInRight.springify()}
+                            style={styles.horizontalMenuContainer}
+                        >
+                            <View style={styles.horizontalMenuGlass}>
+                                <ScrollView
+                                    horizontal
+                                    showsHorizontalScrollIndicator={false}
+                                    contentContainerStyle={{ gap: 8, paddingHorizontal: 4 }}
+                                    keyboardShouldPersistTaps="handled"
+                                >
+                                    {CATEGORIES.map((cat, index) => {
+                                        const isActive = activeCategory === cat.id;
+                                        return (
+                                            <Pressable
+                                                key={cat.id}
+                                                onPress={() => {
+                                                    setActiveCategory(cat.id);
+                                                    setIsMenuOpen(false);
+                                                }}
+                                                style={({ pressed }) => [
+                                                    styles.horizontalMenuItem,
+                                                    isActive && styles.horizontalMenuItemActive,
+                                                    pressed && { opacity: 0.7 }
+                                                ]}
+                                            >
+                                                <MaterialCommunityIcons
+                                                    name={cat.icon as any}
+                                                    size={22}
+                                                    color={isActive ? '#FFF' : Colors.textSecondary}
+                                                />
+                                                <Text style={[
+                                                    styles.horizontalMenuText,
+                                                    isActive && styles.horizontalMenuTextActive
+                                                ]}>
+                                                    {cat.title}
+                                                </Text>
+                                            </Pressable>
+                                        );
+                                    })}
+                                </ScrollView>
+                            </View>
+                        </Animated.View>
+                    )}
+
+                    {/* Main FAB Button */}
+                    <Animated.View style={fabAnimatedStyle}>
+                        <Pressable
+                            style={styles.fabButton}
+                            onPress={() => setIsMenuOpen(!isMenuOpen)}
+                        >
+                            <LinearGradient
+                                colors={[Colors.primary, Colors.primaryDark]}
+                                style={styles.fabGradient}
+                            >
+                                {isMenuOpen ? (
+                                    <MaterialCommunityIcons
+                                        name="close"
+                                        size={32}
+                                        color="#FFF"
+                                    />
+                                ) : (
+                                    <Image source={require('@/assets/logo.png')} style={styles.fabLogo} />
+                                )}
+                            </LinearGradient>
+                        </Pressable>
+                    </Animated.View>
+                </View >
+            </ImageBackground >
+        </View >
+    );
+}
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: Colors.background,
+    },
+    background: {
+        flex: 1,
+        width: '100%',
+        height: '100%',
+    },
+    listContent: {
+        padding: Spacing.m,
+        paddingBottom: 100, // Space for bottom bar
+        ...Platform.select({
+            web: {
+                maxWidth: 800,
+                alignSelf: 'center',
+                width: '100%',
+            },
+            default: {},
+        }),
+    },
+    minimalCard: {
+        backgroundColor: LightColors.surface,
+        paddingVertical: Spacing.m,
+        paddingHorizontal: Spacing.s,
+        borderTopLeftRadius: 16,
+        borderTopRightRadius: 16,
+    },
+    minimalCardContent: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        gap: Spacing.m,
+    },
+    textContainer: {
+        flex: 1,
+        paddingRight: Spacing.s,
+    },
+    minimalTitle: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        color: LightColors.text,
+        marginBottom: 4,
+    },
+    // Category Hero Styles
+    categoryHero: {
+        width: '100%',
+        height: 160,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: Colors.background,
+    },
+    categoryTitleBox: {
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        paddingHorizontal: 24,
+        paddingVertical: 12,
+        borderRadius: 12,
+    },
+    categoryHeroTitle: {
+        fontSize: 28,
+        fontWeight: 'bold',
+        color: '#FFFFFF',
+        textTransform: 'capitalize',
+        letterSpacing: 1,
+    },
+    minimalDescription: {
+        fontSize: 14,
+        color: LightColors.textSecondary,
+        marginBottom: 8,
+        lineHeight: 20,
+    },
+    minimalPrice: {
+        fontSize: 16,
+        color: Colors.primary,
+        fontWeight: '600',
+    },
+    minimalImage: {
+        width: 80,
+        height: 80,
+        borderRadius: 12,
+        backgroundColor: LightColors.background,
+    },
+    imageUnavailable: {
+        opacity: 0.4,
+    },
+    unavailableOverlay: {
+        position: 'absolute',
+        top: 0,
+        right: 0,
+        backgroundColor: 'rgba(0,0,0,0.7)',
+        paddingHorizontal: 6,
+        paddingVertical: 3,
+        borderTopRightRadius: 12,
+        borderBottomLeftRadius: 8,
+    },
+    unavailableText: {
+        color: '#FFF',
+        fontSize: 9,
+        fontWeight: 'bold',
+        textTransform: 'uppercase',
+    },
+    separator: {
+        height: 1,
+        backgroundColor: LightColors.border,
+        opacity: 0.5,
+        marginHorizontal: Spacing.s,
+    },
+    // Recommendation Card Styles
+    recommendationCard: {
+        width: Platform.select({
+            web: 220,
+            default: 200
+        }),
+        backgroundColor: LightColors.surface,
+        borderRadius: 16,
+        overflow: 'hidden',
+        marginRight: Spacing.m,
+        borderWidth: 1,
+        borderColor: LightColors.border,
+        ...Platform.select({
+            web: {
+                boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                cursor: 'pointer',
+            },
+            default: {
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.1,
+                shadowRadius: 8,
+                elevation: 4,
+            },
+        }),
+    },
+    recommendationImage: {
+        width: '100%',
+        height: Platform.select({
+            web: 140,
+            default: 120
+        }),
+        ...Platform.select({
+            web: {
+                objectFit: 'cover' as any,
+            },
+            default: {},
+        }),
+    },
+    recommendationContent: {
+        padding: Spacing.m,
+    },
+    recommendationTitle: {
+        fontWeight: 'bold',
+        marginBottom: 4,
+        color: LightColors.text,
+        fontSize: 14,
+    },
+    recommendationPrice: {
+        color: Colors.primary,
+        fontWeight: 'bold',
+    },
+    // Story View Styles
+    storyContainer: {
+        paddingBottom: 0,
+    },
+    storySheet: {
+        backgroundColor: LightColors.background,
+        borderTopLeftRadius: 32,
+        borderTopRightRadius: 32,
+        marginTop: -40,
+        paddingBottom: 100,
+        overflow: 'hidden',
+    },
+    heroContainer: {
+        width: '100%',
+        height: Dimensions.get('window').height,
+        justifyContent: 'center',
+    },
+    heroImage: {
+        width: '100%',
+        height: '100%',
+    },
+    heroGradient: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: Spacing.l,
+    },
+    heroContent: {
+        alignItems: 'center',
+    },
+    heroLogo: {
+        width: 114,
+        height: 114,
+        marginBottom: Spacing.s,
+        resizeMode: 'contain',
+    },
+    heroTitle: {
+        color: '#FFF',
+        textAlign: 'center',
+        marginBottom: 4,
+        textShadowColor: 'rgba(0,0,0,0.5)',
+        textShadowOffset: { width: 0, height: 2 },
+        textShadowRadius: 4,
+        fontSize: 42,
+        fontWeight: 'bold',
+    },
+    heroSubtitle: {
+        color: Colors.secondary,
+        fontWeight: '400',
+        letterSpacing: 2,
+        textTransform: 'uppercase',
+        fontSize: 18,
+        bottom: 8,
+    },
+    sectionContainer: {
+        paddingHorizontal: Spacing.l,
+        marginBottom: Spacing.xl,
+    },
+    storyText: {
+        color: LightColors.textSecondary,
+        textAlign: 'center',
+        lineHeight: 24,
+        fontStyle: 'italic',
+        fontSize: 14,
+    },
+    sectionTitle: {
+        color: LightColors.text,
+        marginBottom: Spacing.m,
+        textAlign: 'left',
+        fontSize: 20,
+        fontWeight: 'bold',
+    },
+    recommendationsList: {
+        paddingRight: Spacing.l,
+        gap: Spacing.m,
+    },
+    // Allergen Banner
+    allergenBanner: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        backgroundColor: 'rgba(252, 1, 3, 0.08)',
+        padding: Spacing.m,
+        borderRadius: 12,
+        borderWidth: 1,
+        borderColor: 'rgba(252, 1, 3, 0.2)',
+    },
+    allergenBannerContent: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    allergenBannerTitle: {
+        fontWeight: 'bold',
+        color: Colors.primary,
+        fontSize: 14,
+    },
+    allergenBannerSubtitle: {
+        fontSize: 12,
+        color: LightColors.textSecondary,
+    },
+    allergenInfoText: {
+        color: LightColors.textSecondary,
+        marginTop: Spacing.m,
+        marginBottom: Spacing.m,
+        textAlign: 'center',
+        paddingHorizontal: Spacing.s,
+        fontStyle: 'italic',
+        fontSize: 14,
+    },
+    offMenuIntro: {
+        color: LightColors.textSecondary,
+        marginBottom: Spacing.m,
+        textAlign: 'center',
+        paddingHorizontal: Spacing.s,
+        fontStyle: 'italic',
+        lineHeight: 22,
+        fontSize: 14,
+    },
+    // Tuna Banner
+    tunaBanner: {
+        width: '100%',
+        height: 160,
+        marginBottom: Spacing.m,
+        justifyContent: 'center',
+        alignItems: 'center',
+        overflow: 'hidden',
+        borderRadius: 16,
+    },
+    tunaBannerOverlay: {
+        width: '100%',
+        height: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0,0,0,0.4)',
+        padding: Spacing.m,
+    },
+    tunaBannerTitle: {
+        color: Colors.primary,
+        textAlign: 'center',
+        marginBottom: 4,
+        fontWeight: 'bold',
+        textShadowColor: 'rgba(0, 0, 0, 0.75)',
+        textShadowOffset: { width: -1, height: 1 },
+        textShadowRadius: 10,
+        fontSize: 24,
+    },
+    tunaBannerSubtitle: {
+        color: '#FFFFFF',
+        textAlign: 'center',
+        fontWeight: '600',
+        letterSpacing: 1,
+        fontSize: 14,
+    },
+    // Info Section
+    infoContainer: {
+        paddingHorizontal: Spacing.l,
+        marginBottom: Spacing.xl,
+    },
+    infoTitle: {
+        color: LightColors.text,
+        marginBottom: Spacing.m,
+        textAlign: 'left',
+        fontSize: 20,
+        fontWeight: 'bold',
+    },
+    widgetsGrid: {
+        gap: Spacing.m,
+    },
+    mapWidget: {
+        height: 180,
+        borderRadius: 24,
+        overflow: 'hidden',
+        backgroundColor: LightColors.surface,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.1,
+        shadowRadius: 12,
+        elevation: 5,
+    },
+    mapImage: {
+        width: '100%',
+        height: '100%',
+    },
+    mapOverlay: {
+        ...StyleSheet.absoluteFillObject,
+        backgroundColor: 'rgba(0,0,0,0.3)',
+        padding: Spacing.m,
+        justifyContent: 'space-between',
+    },
+    mapContent: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 8,
+    },
+    mapAddress: {
+        color: '#FFF',
+        fontWeight: 'bold',
+        fontSize: 16,
+        textShadowColor: 'rgba(0,0,0,0.5)',
+        textShadowOffset: { width: 0, height: 1 },
+        textShadowRadius: 4,
+    },
+    mapButton: {
+        backgroundColor: Colors.primary,
+        flexDirection: 'row',
+        alignItems: 'center',
+        alignSelf: 'flex-start',
+        paddingVertical: 8,
+        paddingHorizontal: 16,
+        borderRadius: 20,
+        gap: 8,
+    },
+    mapButtonText: {
+        color: '#FFF',
+        fontWeight: 'bold',
+        fontSize: 14,
+    },
+    rowWidgets: {
+        flexDirection: 'row',
+        gap: Spacing.m,
+    },
+    infoWidget: {
+        flex: 1,
+        backgroundColor: LightColors.surface,
+        padding: Spacing.m,
+        borderRadius: 24,
+        alignItems: 'center',
+        justifyContent: 'center',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.05,
+        shadowRadius: 8,
+        elevation: 3,
+        gap: 8,
+    },
+    iconCircle: {
+        width: 48,
+        height: 48,
+        borderRadius: 24,
+        backgroundColor: 'rgba(252, 1, 3, 0.1)',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: 4,
+    },
+    widgetLabel: {
+        fontSize: 13,
+        color: LightColors.textSecondary,
+        textAlign: 'center',
+    },
+
+    signatureContainer: {
+        alignItems: 'center',
+        marginTop: Spacing.m,
+        marginBottom: Spacing.xl,
+    },
+    signature: {
+        fontFamily: 'serif',
+        fontSize: 24,
+        color: Colors.primary,
+        fontStyle: 'italic',
+    },
+    // Bottom Dock Styles
+    bottomDockContainer: {
+        position: 'absolute',
+        bottom: 20,
+        left: 0,
+        right: 0,
+        alignItems: 'center',
+        paddingHorizontal: Spacing.m,
+    },
+    dockGlass: {
+        flexDirection: 'row',
+        backgroundColor: 'rgba(255, 255, 255, 0.9)',
+        borderRadius: 32,
+        padding: 6,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.15,
+        shadowRadius: 12,
+        elevation: 8,
+        borderWidth: 1,
+        borderColor: 'rgba(255,255,255,0.5)',
+    },
+    dockContent: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 4,
+    },
+    dockTab: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingVertical: 8,
+        paddingHorizontal: 12,
+        borderRadius: 24,
+        gap: 8,
+    },
+    dockTabActive: {
+        backgroundColor: Colors.primary,
+    },
+    dockTabSpecial: {
+        paddingHorizontal: 8,
+    },
+    dockIconContainer: {
+        width: 36,
+        height: 36,
+        borderRadius: 18,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    dockIconContainerActive: {
+        backgroundColor: 'rgba(255,255,255,0.2)',
+    },
+    dockIconContainerSpecial: {
+        width: 36,
+        height: 36,
+        borderRadius: 18,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'transparent',
+    },
+    // New Badge Styles
+    newBadge: {
+        position: 'absolute',
+        top: 8,
+        left: 8,
+        paddingHorizontal: 8,
+        paddingVertical: 4,
+        borderRadius: 8,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.2,
+        shadowRadius: 4,
+        elevation: 3,
+        zIndex: 10,
+    },
+    newBadgeText: {
+        color: '#FFF',
+        fontSize: 10,
+        fontWeight: 'bold',
+    },
+    unavailableBadge: {
+        position: 'absolute',
+        top: 8,
+        right: 8,
+        paddingHorizontal: 8,
+        paddingVertical: 4,
+        borderRadius: 8,
+        backgroundColor: 'rgba(0, 0, 0, 0.7)',
+        zIndex: 10,
+    },
+    unavailableBadgeText: {
+        color: '#FFF',
+        fontSize: 10,
+        fontWeight: 'bold',
+    },
+    newBadgeMinimal: {
+        position: 'absolute',
+        top: -6,
+        left: -6,
+        paddingHorizontal: 6,
+        paddingVertical: 3,
+        borderRadius: 6,
+        zIndex: 10,
+    },
+    newBadgeTextMinimal: {
+        color: '#FFF',
+        fontSize: 8,
+        fontWeight: 'bold',
+    },
+    dockLabel: {
+        color: '#FFF',
+        fontWeight: 'bold',
+        fontSize: 13,
+    },
+    footerContainer: {
+        alignItems: 'center',
+        marginBottom: Spacing.xl * 3,
+        opacity: 0.6,
+    },
+    footerText: {
+        color: LightColors.textSecondary,
+        fontSize: 12,
+        letterSpacing: 1,
+    },
+    // Newsletter Styles
+    newsletterContainer: {
+        marginHorizontal: Spacing.l,
+        marginBottom: Spacing.xl,
+        borderRadius: 24,
+        overflow: 'hidden',
+        borderWidth: 1,
+        borderColor: 'rgba(252, 1, 3, 0.2)',
+    },
+    newsletterGradient: {
+        padding: Spacing.l,
+        alignItems: 'center',
+    },
+    newsletterTitle: {
+        color: Colors.primary,
+        marginBottom: 8,
+        textAlign: 'center',
+        fontSize: 20,
+        fontWeight: 'bold',
+    },
+    newsletterSubtitle: {
+        color: LightColors.textSecondary,
+        textAlign: 'center',
+        marginBottom: Spacing.l,
+        fontSize: 14,
+    },
+    inputContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: LightColors.surface,
+        borderRadius: 12,
+        borderWidth: 1,
+        borderColor: Colors.border,
+        paddingHorizontal: Spacing.m,
+        marginBottom: Spacing.m,
+        width: '100%',
+        height: 50,
+    },
+    inputIcon: {
+        marginRight: Spacing.s,
+    },
+    input: {
+        flex: 1,
+        height: '100%',
+        color: LightColors.text,
+        fontSize: 16,
+    },
+    checkboxContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: Spacing.l,
+        width: '100%',
+    },
+    checkboxText: {
+        color: LightColors.textSecondary,
+        fontSize: 12,
+        marginLeft: Spacing.s,
+        flex: 1,
+    },
+    subscribeButton: {
+        backgroundColor: Colors.primary,
+        paddingVertical: 14,
+        paddingHorizontal: 32,
+        borderRadius: 12,
+        width: '100%',
+        alignItems: 'center',
+        shadowColor: Colors.primary,
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.3,
+        shadowRadius: 8,
+        elevation: 4,
+    },
+    subscribeButtonText: {
+        color: '#FFF',
+        fontSize: 16,
+        fontWeight: 'bold',
+    },
+    successContainer: {
+        alignItems: 'center',
+        padding: Spacing.m,
+    },
+    successIconCircle: {
+        width: 64,
+        height: 64,
+        borderRadius: 32,
+        backgroundColor: '#10B981', // Emerald 500
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: Spacing.m,
+        shadowColor: '#10B981',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.3,
+        shadowRadius: 8,
+        elevation: 4,
+    },
+    successTitle: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        color: Colors.primary,
+        marginBottom: 8,
+        textAlign: 'center',
+    },
+    successSubtitle: {
+        fontSize: 14,
+        color: LightColors.textSecondary,
+        textAlign: 'center',
+        lineHeight: 20,
+    },
+    // Off Menu Badge
+    offMenuBadge: {
+        position: 'absolute',
+        top: 8,
+        right: 8,
+        paddingHorizontal: 8,
+        paddingVertical: 4,
+        borderRadius: 8,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.2,
+        shadowRadius: 4,
+        elevation: 3,
+        zIndex: 10,
+    },
+    offMenuBadgeText: {
+        color: '#FFF',
+        fontSize: 10,
+        fontWeight: 'bold',
+        letterSpacing: 0.5,
+    },
+    unavailableBadgeMinimal: {
+        position: 'absolute',
+        bottom: 4,
+        left: 4,
+        backgroundColor: 'rgba(0,0,0,0.7)',
+        paddingHorizontal: 8,
+        paddingVertical: 4,
+        borderRadius: 6,
+        zIndex: 10,
+    },
+    unavailableBadgeTextMinimal: {
+        color: '#FFF',
+        fontSize: 10,
+        fontWeight: 'bold',
+    },
+
+    // Schedule Modal Styles
+    modalOverlay: {
+        flex: 1,
+        backgroundColor: 'rgba(0,0,0,0.5)',
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: Spacing.l,
+    },
+    modalContent: {
+        backgroundColor: '#FFFFFF',
+        borderRadius: 24,
+        padding: Spacing.l,
+        width: '100%',
+        maxWidth: 400,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 10 },
+        shadowOpacity: 0.25,
+        shadowRadius: 20,
+        elevation: 10,
+    },
+    modalHeader: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: Spacing.s,
+        marginBottom: Spacing.l,
+    },
+    modalTitle: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        color: Colors.primary,
+    },
+    scheduleList: {
+        gap: Spacing.m,
+        marginBottom: Spacing.l,
+    },
+    scheduleRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingVertical: Spacing.xs,
+    },
+    scheduleRowToday: {
+        backgroundColor: '#ECFDF5', // Light emerald background
+        paddingHorizontal: Spacing.m,
+        paddingVertical: Spacing.s,
+        borderRadius: 12,
+        marginHorizontal: -Spacing.m,
+    },
+    dayName: {
+        fontSize: 16,
+        color: Colors.primary,
+        textTransform: 'capitalize',
+        fontWeight: '500',
+    },
+    dayNameToday: {
+        fontWeight: 'bold',
+        color: Colors.primary,
+    },
+    hoursText: {
+        fontSize: 16,
+        color: Colors.primary,
+        opacity: 0.8,
+    },
+    hoursTextToday: {
+        fontWeight: 'bold',
+        color: Colors.primary,
+        opacity: 1,
+    },
+    closedText: {
+        color: '#EF4444',
+    },
+    todayBadge: {
+        position: 'absolute',
+        left: -60,
+        backgroundColor: Colors.primary,
+        paddingHorizontal: 8,
+        paddingVertical: 2,
+        borderRadius: 4,
+    },
+    todayBadgeText: {
+        color: '#FFF',
+        fontSize: 10,
+        fontWeight: 'bold',
+    },
+    closeButton: {
+        backgroundColor: '#F0FDF4',
+        paddingVertical: Spacing.m,
+        borderRadius: 12,
+        alignItems: 'center',
+        borderWidth: 1,
+        borderColor: 'rgba(252, 1, 3, 0.2)',
+    },
+    closeButtonText: {
+        color: Colors.primary,
+        fontWeight: '600',
+        fontSize: 16,
+    },
+    // Immersive Header
+    immersiveHeader: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        height: 320,
+        zIndex: 0,
+    },
+    immersiveHeroImage: {
+        width: '100%',
+        height: '100%',
+        justifyContent: 'center',
+    },
+    immersiveGradient: {
+        ...StyleSheet.absoluteFillObject,
+    },
+    immersiveTitleContainer: {
+        padding: Spacing.l,
+        alignItems: 'center',
+    },
+    immersiveTitle: {
+        ...Typography.h1,
+        color: '#FFFFFF',
+        fontSize: 36, // Slightly smaller font for shorter header
+        textAlign: 'center',
+        textShadowColor: 'rgba(0,0,0,0.5)',
+        textShadowOffset: { width: 0, height: 4 },
+        textShadowRadius: 10,
+    },
+    immersiveSubtitle: {
+        ...Typography.body,
+        color: 'rgba(255,255,255,0.8)',
+        fontSize: 12,
+        marginTop: 4,
+        letterSpacing: 2,
+        textTransform: 'uppercase',
+    },
+    // Sheet Container
+    sheetContainer: {
+        flex: 1,
+        marginTop: 280, // Overlap with header (320 - 40)
+        backgroundColor: LightColors.background,
+        borderTopLeftRadius: 32,
+        borderTopRightRadius: 32,
+        overflow: 'hidden',
+        zIndex: 1,
+    },
+
+    // Floating Category Selector
+    floatingSelectorContainer: {
+        position: 'absolute',
+        bottom: 30,
+        left: 0,
+        right: 0,
+        alignItems: 'center',
+        zIndex: 100,
+    },
+    floatingSelectorGlass: {
+        backgroundColor: 'rgba(15, 23, 42, 0.9)',
+        borderRadius: 40,
+        padding: 6,
+        borderWidth: 1,
+        borderColor: 'rgba(255,255,255,0.1)',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 8 },
+        shadowOpacity: 0.3,
+        shadowRadius: 16,
+        elevation: 10,
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 8,
+    },
+    pillButton: {
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        borderRadius: 30,
+        backgroundColor: 'transparent',
+    },
+    pillButtonActive: {
+        backgroundColor: Colors.primary,
+        shadowColor: Colors.primary,
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.3,
+        shadowRadius: 8,
+        elevation: 4,
+    },
+    pillText: {
+        color: 'rgba(255,255,255,0.6)',
+        fontWeight: '600',
+        fontSize: 14,
+    },
+    pillTextActive: {
+        color: '#FFFFFF',
+        fontWeight: 'bold',
+    },
+    // Horizontal Menu Styles
+    horizontalMenuContainer: {
+        position: 'absolute',
+        bottom: 70,
+        alignItems: 'center',
+        width: '100%',
+        zIndex: 100,
+        pointerEvents: 'box-none',
+    },
+    horizontalMenuGlass: {
+        backgroundColor: 'rgba(255, 255, 255, 0.95)',
+        borderRadius: 32,
+        paddingVertical: 12,
+        paddingHorizontal: 8,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.25,
+        shadowRadius: 12,
+        elevation: 8,
+        borderWidth: 1,
+        borderColor: 'rgba(0,0,0,0.05)',
+        maxWidth: '95%',
+    },
+    horizontalMenuItem: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingVertical: 10,
+        paddingHorizontal: 18,
+        borderRadius: 24,
+        gap: 8,
+        backgroundColor: 'rgba(0,0,0,0.03)',
+        minWidth: 80,
+        ...Platform.select({
+            web: {
+                cursor: 'pointer',
+                userSelect: 'none',
+            } as any,
+            default: {}
+        }),
+    },
+    horizontalMenuItemActive: {
+        backgroundColor: Colors.primary,
+    },
+    horizontalMenuText: {
+        fontSize: 15,
+        color: Colors.text,
+        fontWeight: '600',
+    },
+    horizontalMenuTextActive: {
+        color: '#FFF',
+        fontWeight: 'bold',
+    },
+    fabButton: {
+        width: 50,
+        height: 50,
+        borderRadius: 32,
+        shadowColor: Colors.primary,
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.3,
+        shadowRadius: 12,
+        elevation: 8,
+    },
+    fabGradient: {
+        width: '100%',
+        height: '100%',
+        borderRadius: 32,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderWidth: 2,
+        borderColor: 'rgba(255,255,255,0.2)',
+    },
+    fabLogo: {
+        width: 100,
+        height: 100,
+        resizeMode: 'contain',
+        bottom: 10,
+    },
+});
