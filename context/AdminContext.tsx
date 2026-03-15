@@ -204,7 +204,7 @@ export function AdminProvider({ children }: { children: ReactNode }) {
         offerText: p.offer_text,
         translations: p.translations,
         formats: p.formats,
-        hidden: p.hidden,
+        hidden: p.translations?._hidden || false,
     }));
 
     const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -392,9 +392,11 @@ export function AdminProvider({ children }: { children: ReactNode }) {
                 is_banner: product.isBanner ?? false,
                 is_offer: product.isOffer ?? false,
                 offer_text: product.offerText,
-                translations: product.translations,
                 formats: product.formats,
-                hidden: product.hidden,
+                translations: {
+                    ...product.translations,
+                    _hidden: product.hidden || false,
+                },
             };
 
             await supabaseCreateProduct(supabaseProduct as any);
@@ -420,7 +422,12 @@ export function AdminProvider({ children }: { children: ReactNode }) {
             if (updates.offerText !== undefined) { supabaseUpdates.offer_text = updates.offerText; delete supabaseUpdates.offerText; }
             if (updates.pairingDescription !== undefined) { supabaseUpdates.pairing_description = updates.pairingDescription; delete supabaseUpdates.pairingDescription; }
             // formats is already snake_case compatible, no mapping needed
-            // hidden is already snake_case compatible, no mapping needed
+            // hidden is stored inside translations JSONB
+            if (updates.hidden !== undefined) {
+                const currentTranslations = products.find(p => p.id === id)?.translations || {};
+                supabaseUpdates.translations = { ...currentTranslations, _hidden: updates.hidden };
+                delete supabaseUpdates.hidden;
+            }
 
             await supabaseUpdateProduct(id, supabaseUpdates);
             await refreshProducts();
