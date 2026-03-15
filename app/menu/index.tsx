@@ -358,7 +358,7 @@ const StoryView = ({ onScroll }: { onScroll: (event: any) => void }) => {
                     style={styles.heroGradient}
                 >
                     <View style={styles.heroContent}>
-                        <Image source={require('@/assets/logo.png')} style={styles.heroLogo} />
+                        <Image source={require('@/assets/logo3.png')} style={styles.heroLogo} />
                         <Text style={styles.heroTitle}>{t('storyHeroTitle')}</Text>
                         <Text style={styles.heroSubtitle}>{t('storyHeroSubtitle')}</Text>
                     </View>
@@ -1047,8 +1047,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     heroLogo: {
-        width: 114,
-        height: 114,
+        width: 250,
+        height: 250,
         marginBottom: Spacing.s,
         resizeMode: 'contain',
     },
