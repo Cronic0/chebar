@@ -33,6 +33,7 @@ export interface Product {
     isBanner?: boolean;
     isOffer?: boolean;
     offerText?: string;
+    hidden?: boolean;
     formats?: { name: string; price: number }[];
     // Translations
     translations?: {
@@ -203,6 +204,7 @@ export function AdminProvider({ children }: { children: ReactNode }) {
         offerText: p.offer_text,
         translations: p.translations,
         formats: p.formats,
+        hidden: p.hidden,
     }));
 
     const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -392,6 +394,7 @@ export function AdminProvider({ children }: { children: ReactNode }) {
                 offer_text: product.offerText,
                 translations: product.translations,
                 formats: product.formats,
+                hidden: product.hidden,
             };
 
             await supabaseCreateProduct(supabaseProduct as any);
@@ -417,6 +420,7 @@ export function AdminProvider({ children }: { children: ReactNode }) {
             if (updates.offerText !== undefined) { supabaseUpdates.offer_text = updates.offerText; delete supabaseUpdates.offerText; }
             if (updates.pairingDescription !== undefined) { supabaseUpdates.pairing_description = updates.pairingDescription; delete supabaseUpdates.pairingDescription; }
             // formats is already snake_case compatible, no mapping needed
+            // hidden is already snake_case compatible, no mapping needed
 
             await supabaseUpdateProduct(id, supabaseUpdates);
             await refreshProducts();

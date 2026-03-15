@@ -28,6 +28,7 @@ export interface Product {
     is_off_menu: boolean;
     is_banner: boolean;
     is_offer: boolean;
+    hidden?: boolean;
     formats?: { name: string; price: number }[];
     translations?: {
         en?: { title: string; description: string };

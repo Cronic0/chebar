@@ -715,7 +715,7 @@ export default function MenuScreen() {
     }
 
     const filteredItems = products.filter(
-        (item) => item.category === activeCategory
+        (item) => item.category === activeCategory && !item.hidden
     );
 
     const renderItem = ({ item, index }: { item: any, index: number }) => (

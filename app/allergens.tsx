@@ -42,6 +42,7 @@ export default function AllergensScreen() {
 
     // Filter items: Exclude items that contain ANY of the selected allergens
     const filteredItems = products.filter((item: any) => {
+        if (item.hidden) return false;
         if (selectedAllergens.length === 0) return true;
 
         const keyToSpanish: Record<string, string> = {

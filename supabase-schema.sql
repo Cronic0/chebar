@@ -30,6 +30,7 @@ CREATE TABLE IF NOT EXISTS products (
     offer_text TEXT,
     translations JSONB,
     formats JSONB,
+    hidden BOOLEAN DEFAULT false,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );

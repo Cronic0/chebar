@@ -59,6 +59,8 @@ export default function ProductCreateEditScreen() {
     const [offerText, setOfferText] = useState('');
     const [isSaving, setIsSaving] = useState(false);
     const [formats, setFormats] = useState<{ name: string; price: string }[]>([]);
+    const [hidden, setHidden] = useState(false);
+    const [showTags, setShowTags] = useState(false);
 
     useEffect(() => {
         if (existingProduct) {
@@ -78,6 +80,7 @@ export default function ProductCreateEditScreen() {
             setIsOffer(existingProduct.isOffer || false);
             setOfferText(existingProduct.offerText || '');
             setFormats(existingProduct.formats?.map(f => ({ name: f.name, price: f.price.toString() })) || []);
+            setHidden(existingProduct.hidden || false);
         }
     }, [existingProduct]);
 
@@ -181,6 +184,7 @@ export default function ProductCreateEditScreen() {
             isOffer,
             offerText,
             formats: formats.filter(f => f.name.trim() && f.price.trim()).map(f => ({ name: f.name.trim(), price: parseFloat(f.price.replace(',', '.')) || 0 })),
+            hidden,
         };
 
         console.log('Product Data to save:', productData);
@@ -497,76 +501,30 @@ export default function ProductCreateEditScreen() {
                             )}
                         </View>
 
+                        {/* === VISIBILITY & AVAILABILITY === */}
                         <View style={styles.field}>
+                            {/* Mostrar en carta Toggle */}
                             <View style={styles.availabilityRow}>
                                 <View style={styles.availabilityInfo}>
-                                    <Text style={styles.label}>Recomendación de la Casa</Text>
+                                    <Text style={styles.label}>📋 Mostrar en carta</Text>
                                     <Text style={styles.availabilityDescription}>
-                                        {isRecommendation ? 'Producto destacado en la sección de recomendaciones' : 'Producto estándar'}
+                                        {!hidden ? 'El producto aparece en la carta pública' : 'El producto está guardado pero NO se muestra'}
                                     </Text>
                                 </View>
                                 <Pressable
-                                    style={[styles.toggleButton, isRecommendation && styles.toggleButtonActive]}
-                                    onPress={() => setIsRecommendation(!isRecommendation)}
+                                    style={[styles.toggleButton, !hidden && styles.toggleButtonActive]}
+                                    onPress={() => setHidden(!hidden)}
                                 >
-                                    <View style={[styles.toggleThumb, isRecommendation && styles.toggleThumbActive]} />
-                                </Pressable>
-                            </View>
-
-                            {/* Novedad Toggle */}
-                            <View style={styles.availabilityRow}>
-                                <View style={styles.availabilityInfo}>
-                                    <Text style={styles.label}>Novedad</Text>
-                                    <Text style={styles.availabilityDescription}>
-                                        {isNew ? 'Producto marcado como novedad' : 'Sin etiqueta de novedad'}
-                                    </Text>
-                                </View>
-                                <Pressable
-                                    style={[styles.toggleButton, isNew && styles.toggleButtonActive]}
-                                    onPress={() => setIsNew(!isNew)}
-                                >
-                                    <View style={[styles.toggleThumb, isNew && styles.toggleThumbActive]} />
-                                </Pressable>
-                            </View>
-
-                            {/* Fuera de Carta Toggle */}
-                            <View style={styles.availabilityRow}>
-                                <View style={styles.availabilityInfo}>
-                                    <Text style={styles.label}>Fuera de Carta</Text>
-                                    <Text style={styles.availabilityDescription}>
-                                        {isOffMenu ? 'Producto mostrado en sección especial' : 'Producto estándar'}
-                                    </Text>
-                                </View>
-                                <Pressable
-                                    style={[styles.toggleButton, isOffMenu && styles.toggleButtonActive]}
-                                    onPress={() => setIsOffMenu(!isOffMenu)}
-                                >
-                                    <View style={[styles.toggleThumb, isOffMenu && styles.toggleThumbActive]} />
-                                </Pressable>
-                            </View>
-
-                            {/* Banner Toggle */}
-                            <View style={styles.availabilityRow}>
-                                <View style={styles.availabilityInfo}>
-                                    <Text style={styles.label}>Mostrar en Banner</Text>
-                                    <Text style={styles.availabilityDescription}>
-                                        {isBanner ? 'Aparece en el carrusel del banner principal' : 'No aparece en banner'}
-                                    </Text>
-                                </View>
-                                <Pressable
-                                    style={[styles.toggleButton, isBanner && styles.toggleButtonActive]}
-                                    onPress={() => setIsBanner(!isBanner)}
-                                >
-                                    <View style={[styles.toggleThumb, isBanner && styles.toggleThumbActive]} />
+                                    <View style={[styles.toggleThumb, !hidden && styles.toggleThumbActive]} />
                                 </Pressable>
                             </View>
 
                             {/* Disponibilidad Toggle */}
                             <View style={styles.availabilityRow}>
                                 <View style={styles.availabilityInfo}>
-                                    <Text style={styles.label}>Disponibilidad</Text>
+                                    <Text style={styles.label}>✅ Disponibilidad</Text>
                                     <Text style={styles.availabilityDescription}>
-                                        {available ? 'Producto visible en el menú' : 'Producto oculto con etiqueta'}
+                                        {available ? 'Producto disponible' : 'Se muestra como "AGOTADO" en la carta'}
                                     </Text>
                                 </View>
                                 <Pressable
@@ -576,51 +534,121 @@ export default function ProductCreateEditScreen() {
                                     <View style={[styles.toggleThumb, available && styles.toggleThumbActive]} />
                                 </Pressable>
                             </View>
+                        </View>
 
-                            {/* Offer Toggle */}
-                            <View style={styles.availabilityRow}>
-                                <View style={styles.availabilityInfo}>
-                                    <Text style={styles.label}>Oferta Especial</Text>
-                                    <Text style={styles.availabilityDescription}>
-                                        {isOffer ? 'Producto marcado con etiqueta de oferta' : 'Sin etiqueta de oferta'}
-                                    </Text>
+                        {/* === COLLAPSIBLE TAGS SECTION === */}
+                        <View style={styles.field}>
+                            <Pressable
+                                style={[styles.pairingButton, showTags && styles.pairingButtonActive]}
+                                onPress={() => setShowTags(!showTags)}
+                            >
+                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                    <MaterialCommunityIcons name="tag-multiple" size={24} color={Colors.primary} />
+                                    <Text style={styles.pairingButtonText}>Etiquetas</Text>
                                 </View>
-                                <Pressable
-                                    style={[styles.toggleButton, isOffer && styles.toggleButtonActive]}
-                                    onPress={() => setIsOffer(!isOffer)}
-                                >
-                                    <View style={[styles.toggleThumb, isOffer && styles.toggleThumbActive]} />
-                                </Pressable>
-                            </View>
+                                <MaterialCommunityIcons
+                                    name={showTags ? 'chevron-up' : 'chevron-down'}
+                                    size={24}
+                                    color="#FFF"
+                                />
+                            </Pressable>
 
-                            {isOffer && (
-                                <View style={styles.field}>
-                                    <Text style={styles.label}>Texto de la Oferta</Text>
-                                    <TextInput
-                                        style={styles.input}
-                                        value={offerText}
-                                        onChangeText={setOfferText}
-                                        placeholder="Ej: 50%, 2x1, -20%"
-                                        placeholderTextColor="rgba(255,255,255,0.4)"
-                                    />
+                            {showTags && (
+                                <View style={styles.pairingContainer}>
+                                    {/* Recomendación */}
+                                    <View style={styles.availabilityRow}>
+                                        <View style={styles.availabilityInfo}>
+                                            <Text style={styles.label}>⭐ Recomendación de la Casa</Text>
+                                            <Text style={styles.availabilityDescription}>
+                                                {isRecommendation ? 'Destacado en recomendaciones' : 'Producto estándar'}
+                                            </Text>
+                                        </View>
+                                        <Pressable
+                                            style={[styles.toggleButton, isRecommendation && styles.toggleButtonActive]}
+                                            onPress={() => setIsRecommendation(!isRecommendation)}
+                                        >
+                                            <View style={[styles.toggleThumb, isRecommendation && styles.toggleThumbActive]} />
+                                        </Pressable>
+                                    </View>
+
+                                    {/* Novedad */}
+                                    <View style={styles.availabilityRow}>
+                                        <View style={styles.availabilityInfo}>
+                                            <Text style={styles.label}>🆕 Novedad</Text>
+                                            <Text style={styles.availabilityDescription}>
+                                                {isNew ? 'Marcado como novedad' : 'Sin etiqueta'}
+                                            </Text>
+                                        </View>
+                                        <Pressable
+                                            style={[styles.toggleButton, isNew && styles.toggleButtonActive]}
+                                            onPress={() => setIsNew(!isNew)}
+                                        >
+                                            <View style={[styles.toggleThumb, isNew && styles.toggleThumbActive]} />
+                                        </Pressable>
+                                    </View>
+
+                                    {/* Fuera de Carta */}
+                                    <View style={styles.availabilityRow}>
+                                        <View style={styles.availabilityInfo}>
+                                            <Text style={styles.label}>🍽️ Fuera de Carta</Text>
+                                            <Text style={styles.availabilityDescription}>
+                                                {isOffMenu ? 'Mostrado en sección especial' : 'Producto estándar'}
+                                            </Text>
+                                        </View>
+                                        <Pressable
+                                            style={[styles.toggleButton, isOffMenu && styles.toggleButtonActive]}
+                                            onPress={() => setIsOffMenu(!isOffMenu)}
+                                        >
+                                            <View style={[styles.toggleThumb, isOffMenu && styles.toggleThumbActive]} />
+                                        </Pressable>
+                                    </View>
+
+                                    {/* Banner */}
+                                    <View style={styles.availabilityRow}>
+                                        <View style={styles.availabilityInfo}>
+                                            <Text style={styles.label}>🖼️ Mostrar en Banner</Text>
+                                            <Text style={styles.availabilityDescription}>
+                                                {isBanner ? 'En carrusel del banner' : 'No en banner'}
+                                            </Text>
+                                        </View>
+                                        <Pressable
+                                            style={[styles.toggleButton, isBanner && styles.toggleButtonActive]}
+                                            onPress={() => setIsBanner(!isBanner)}
+                                        >
+                                            <View style={[styles.toggleThumb, isBanner && styles.toggleThumbActive]} />
+                                        </Pressable>
+                                    </View>
+
+                                    {/* Oferta */}
+                                    <View style={styles.availabilityRow}>
+                                        <View style={styles.availabilityInfo}>
+                                            <Text style={styles.label}>🏷️ Oferta Especial</Text>
+                                            <Text style={styles.availabilityDescription}>
+                                                {isOffer ? 'Con etiqueta de oferta' : 'Sin oferta'}
+                                            </Text>
+                                        </View>
+                                        <Pressable
+                                            style={[styles.toggleButton, isOffer && styles.toggleButtonActive]}
+                                            onPress={() => setIsOffer(!isOffer)}
+                                        >
+                                            <View style={[styles.toggleThumb, isOffer && styles.toggleThumbActive]} />
+                                        </Pressable>
+                                    </View>
+
+                                    {isOffer && (
+                                        <View style={{ marginTop: 8 }}>
+                                            <Text style={styles.label}>Texto de la Oferta</Text>
+                                            <TextInput
+                                                style={styles.input}
+                                                value={offerText}
+                                                onChangeText={setOfferText}
+                                                placeholder="Ej: 50%, 2x1, -20%"
+                                                placeholderTextColor="rgba(255,255,255,0.4)"
+                                            />
+                                        </View>
+                                    )}
                                 </View>
                             )}
-
-                            {/* Disponibilidad Toggle */}
-                            <View style={styles.availabilityRow}>
-                                <View style={styles.availabilityInfo}>
-                                    <Text style={styles.label}>Disponibilidad</Text>
-                                    <Text style={styles.availabilityDescription}>
-                                        {available ? 'Producto visible en el menú' : 'Producto oculto con etiqueta'}
-                                    </Text>
-                                </View>
-                                <Pressable
-                                    style={[styles.toggleButton, available && styles.toggleButtonActive]}
-                                    onPress={() => setAvailable(!available)}
-                                >
-                                    <View style={[styles.toggleThumb, available && styles.toggleThumbActive]} />
-                                </Pressable>
-                            </View>
                         </View>
 
                         <Pressable
