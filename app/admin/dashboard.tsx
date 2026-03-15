@@ -34,9 +34,11 @@ const SimpleBarChart = ({ data, maxValue }: { data: { label: string; value: numb
 
 const CATEGORIES = [
     { id: 'all', label: 'Todas', icon: 'all-inclusive' },
-    { id: 'entrantes', label: 'Entrantes', icon: 'food-variant' },
-    { id: 'principales', label: 'Principales', icon: 'silverware-fork-knife' },
-    { id: 'postres', label: 'Postres', icon: 'cupcake' },
+    { id: 'aperitivos', label: 'Aperitivos', icon: 'food-variant' },
+    { id: 'en-pan', label: 'En Pan', icon: 'hamburger' },
+    { id: 'nachos', label: 'Nachos', icon: 'pizza' },
+    { id: 'papas-horneadas', label: 'Papas Horneadas', icon: 'potato' },
+    { id: 'birras-artesanas', label: 'Birras Artesanas', icon: 'glass-mug-variant' },
     { id: 'bebidas', label: 'Bebidas', icon: 'cup' },
     { id: 'vinos', label: 'Vinos', icon: 'glass-wine' },
 ];
@@ -111,11 +113,15 @@ export default function AdminDashboard() {
 
     // Get top 15 most viewed products (from Supabase)
     const topProducts = Object.entries(supabaseAnalytics.productViews)
-        .map(([id, viewCount]) => ({
-            id,
-            viewCount,
-            product: products.find(p => p.id === id),
-        }))
+        .map(([id, viewCount]) => {
+            const product = products.find(p => p.id === id);
+            return {
+                id,
+                viewCount,
+                product,
+                totalTimeSpent: data.productAnalytics[id]?.totalTimeSpent || 0
+            };
+        })
         .filter(item => item.product && (topProductsCategory === 'all' || item.product.category === topProductsCategory))
         .sort((a, b) => b.viewCount - a.viewCount)
         .slice(0, 15);
@@ -139,6 +145,7 @@ export default function AdminDashboard() {
                 id: product.id,
                 viewCount,
                 product,
+                totalTimeSpent: data.productAnalytics[product.id]?.totalTimeSpent || 0
             };
         })
         .filter(item => (leastViewedCategory === 'all' || item.product.category === leastViewedCategory))

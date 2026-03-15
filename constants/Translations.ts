@@ -15,7 +15,7 @@ export const Translations = {
         location: 'Calle La Vega, Chiclana de la Frontera',
         hours: 'Todos los días: 12:00 - Cierre',
         reservations: 'Reservas: 912 345 678',
-        familySignature: 'Familia La Flamenca',
+        familySignature: 'Familia Che Bar',
         addToFavorites: 'Añadir a Favoritos',
         removeFromFavorites: 'Eliminar de Favoritos',
         allergensTitle: 'Alérgenos e Intolerancias',
@@ -37,7 +37,7 @@ export const Translations = {
         semanaAtunBanner: 'Descubre nuestra Semana del Atún',
 
         // Story View
-        storyHeroTitle: 'La Flamenca',
+        storyHeroTitle: 'Che Bar',
         storyHeroSubtitle: 'Sabor y Tradición',
         storyText: 'Más que un restaurante, somos un hogar. Cocina de abuela, productos de la tierra y el calor de nuestra gente. Aquí se viene a comer bien y a sentirse en familia.',
 
@@ -54,13 +54,14 @@ export const Translations = {
         allergen_mostaza: 'Mostaza',
 
         // Categories
-        cat_desayunos: 'Desayunos',
-        cat_entrantes: 'Para Picar',
-        cat_principales: 'Platos Fuertes',
-        cat_postres: 'Dulces',
+        cat_aperitivos: 'Aperitivos',
+        cat_en_pan: 'En Pan',
+        cat_nachos: 'Nachos',
+        cat_papas_horneadas: 'Papas Horneadas',
+        cat_birras_artesanas: 'Birras Artesanas',
         cat_bebidas: 'Tragos',
         cat_vinos: 'Bodega',
-        cat_el_trebol: 'Especialidades La Flamenca',
+        cat_el_trebol: 'Especialidades Che Bar',
         cat_semana_atun: 'Tuna Week',
 
         // Menu Items
@@ -96,7 +97,7 @@ export const Translations = {
         product_p2_desc: 'Lomo de salmón premium a la plancha, servido con espárragos trigueros, patatas baby y una suave salsa de eneldo y limón.',
         product_p3_title: 'Risotto de Setas y Trufa',
         product_p3_desc: 'Arroz Carnaroli cremoso cocinado con boletus edulis, champiñones silvestres y terminado con aceite de trufa negra y parmesano.',
-        product_p4_title: 'Hamburguesa Gourmet "Pure Beach"',
+        product_p4_title: 'Hamburguesa Gourmet "Che Bar"',
         product_p4_desc: '200g de carne de vaca madurada, queso cheddar fundido, cebolla caramelizada, bacon crujiente y nuestra salsa secreta en pan brioche.',
         product_p5_title: 'Carrillada Ibérica Estofada',
         product_p5_desc: 'Carrilleras de cerdo ibérico cocinadas a fuego lento en vino tinto durante 4 horas, acompañadas de puré de boniato.',
@@ -170,7 +171,7 @@ export const Translations = {
         open: 'Abierto',
         today: 'Hoy',
         scheduleTitle: 'Horario de Apertura',
-        allergenInfoText: 'En La Flamenca nos preocupamos por tu bienestar. Hemos preparado este filtro de alérgenos para que puedas disfrutar de nuestra cocina con total tranquilidad.',
+        allergenInfoText: 'En Che Bar nos preocupamos por tu bienestar. Hemos preparado este filtro de alérgenos para que puedas disfrutar de nuestra cocina con total tranquilidad.',
     },
     en: {
         // Landing Page
@@ -186,7 +187,7 @@ export const Translations = {
         location: 'Calle La Vega, Chiclana de la Frontera',
         hours: 'Every day: 12:00 - Late',
         reservations: 'Bookings: 912 345 678',
-        familySignature: 'La Flamenca Family',
+        familySignature: 'Che Bar Family',
         addToFavorites: 'Add to Favorites',
         removeFromFavorites: 'Remove from Favorites',
         allergensTitle: 'Allergens & Intolerances',
@@ -221,7 +222,7 @@ export const Translations = {
         semanaAtunBanner: 'Discover our Tuna Week',
 
         // Story View
-        storyHeroTitle: 'La Flamenca',
+        storyHeroTitle: 'Che Bar',
         storyHeroSubtitle: 'Taste & Tradition',
         storyText: 'More than a restaurant, we are a home. Grandma\'s cooking, local products, and the warmth of our people. Here you come to eat well and feel like family.',
 
@@ -238,13 +239,14 @@ export const Translations = {
         allergen_mostaza: 'Mustard',
 
         // Categories
-        cat_desayunos: 'Breakfast',
-        cat_entrantes: 'Starters',
-        cat_principales: 'Main Courses',
-        cat_postres: 'Desserts',
+        cat_aperitivos: 'Aperitivos',
+        cat_en_pan: 'In Bread',
+        cat_nachos: 'Nachos',
+        cat_papas_horneadas: 'Baked Potatoes',
+        cat_birras_artesanas: 'Craft Beers',
         cat_bebidas: 'Drinks',
         cat_vinos: 'Wines',
-        cat_el_trebol: 'La Flamenca Specials',
+        cat_el_trebol: 'Che Bar Specials',
         cat_semana_atun: 'Tuna Week',
 
         // Menu Items
@@ -267,7 +269,7 @@ export const Translations = {
         product_p2_desc: 'Premium grilled salmon fillet, served with wild asparagus, baby potatoes and a smooth dill and lemon sauce.',
         product_p3_title: 'Mushroom and Truffle Risotto',
         product_p3_desc: 'Creamy Carnaroli rice cooked with boletus edulis, wild mushrooms and finished with black truffle oil and parmesan.',
-        product_p4_title: '"Pure Beach" Gourmet Burger',
+        product_p4_title: '"Che Bar" Gourmet Burger',
         product_p4_desc: '200g of matured beef, melted cheddar cheese, caramelized onion, crispy bacon and our secret sauce on brioche bun.',
         product_p5_title: 'Stewed Iberian Cheeks',
         product_p5_desc: 'Iberian pork cheeks slow-cooked in red wine for 4 hours, accompanied by sweet potato puree.',
@@ -331,7 +333,7 @@ export const Translations = {
         pairing_desc_p5: 'Slow-cooked love. Deep flavors that have taken their time to get to know each other and make you fall in love.',
 
         // Allergen Info
-        allergenInfoText: 'At La Flamenca we care about your well-being. We have prepared this allergen filter so you can enjoy our cuisine with complete peace of mind.',
+        allergenInfoText: 'At Che Bar we care about your well-being. We have prepared this allergen filter so you can enjoy our cuisine with complete peace of mind.',
         call: 'Call',
         navigate: 'Navigate',
     },
@@ -349,7 +351,7 @@ export const Translations = {
         location: 'Calle La Vega, Chiclana de la Frontera',
         hours: 'Tous les jours: 12:00 - Tard',
         reservations: 'VIP & Réservations: 912 345 678',
-        familySignature: 'Familia La Flamenca',
+        familySignature: 'Familia Che Bar',
         addToFavorites: 'Ajouter aux Favoris',
         removeFromFavorites: 'Retirer des Favoris',
         allergensTitle: 'Allergènes & Intolérances',
@@ -371,7 +373,7 @@ export const Translations = {
         semanaAtunBanner: 'Découvrez notre Semaine du Thon',
 
         // Story View
-        storyHeroTitle: 'La Flamenca',
+        storyHeroTitle: 'Che Bar',
         storyHeroSubtitle: 'Vibes & Bites',
         storyText: "Plus qu'un bar de plage, nous sommes un style de vie. Nés dans le sable, élevés par le soleil. Ici, la seule règle est de profiter.",
 
@@ -388,13 +390,14 @@ export const Translations = {
         allergen_mostaza: 'Moutarde',
 
         // Categories
-        cat_desayunos: 'Petit-déjeuner',
-        cat_entrantes: 'Entrées',
-        cat_principales: 'Plats Principaux',
-        cat_postres: 'Desserts',
+        cat_aperitivos: 'Apéritifs',
+        cat_en_pan: 'Dans le Pain',
+        cat_nachos: 'Nachos',
+        cat_papas_horneadas: 'Pommes de Terre au Four',
+        cat_birras_artesanas: 'Bières Artisanales',
         cat_bebidas: 'Boissons',
         cat_vinos: 'Vins',
-        cat_el_trebol: 'Spécialités La Flamenca',
+        cat_el_trebol: 'Spécialités Che Bar',
         cat_semana_atun: 'Semaine du Thon',
 
         // Menu Items
@@ -417,7 +420,7 @@ export const Translations = {
         product_p2_desc: 'Pavé de saumon premium grillé, servi avec asperges sauvages, pommes de terre grenailles et une sauce douce aneth-citron.',
         product_p3_title: 'Risotto aux Champignons et Truffe',
         product_p3_desc: 'Riz Carnaroli crémeux cuisiné aux cèpes, champignons sauvages et fini à l\'huile de truffe noire et parmesan.',
-        product_p4_title: 'Burger Gourmet "Pure Beach"',
+        product_p4_title: 'Burger Gourmet "Che Bar"',
         product_p4_desc: '200g de bœuf maturé, cheddar fondu, oignons caramélisés, bacon croustillant et notre sauce secrète sur pain brioché.',
         product_p5_title: 'Joues de Porc Ibérique Braisées',
         product_p5_desc: 'Joues de porc ibérique mijotées au vin rouge pendant 4 heures, accompagnées de purée de patate douce.',
@@ -481,7 +484,7 @@ export const Translations = {
         pairing_desc_p5: 'L\'amour à feu doux. Des saveurs profondes qui ont pris leur temps pour se connaître et vous faire tomber amoureux.',
 
         // Allergen Info
-        allergenInfoText: 'En La Flamenca nos preocupamos por tu bienestar. Hemos preparado este filtro de alérgenos para que puedas disfrutar de nuestra cocina con total tranquilidad.',
+        allergenInfoText: 'En Che Bar nos preocupamos por tu bienestar. Hemos preparado este filtro de alérgenos para que puedas disfrutar de nuestra cocina con total tranquilidad.',
         call: 'Appeler',
         navigate: 'Y aller',
 
@@ -512,7 +515,7 @@ export const Translations = {
         location: 'Calle La Vega, Chiclana de la Frontera',
         hours: 'Täglich: 12:00 - Spät',
         reservations: 'VIP & Reservierungen: 912 345 678',
-        familySignature: 'Familia La Flamenca',
+        familySignature: 'Familia Che Bar',
         addToFavorites: 'Zu Favoriten hinzufügen',
         removeFromFavorites: 'Aus Favoriten entfernen',
         allergensTitle: 'Allergene & Unverträglichkeiten',
@@ -534,7 +537,7 @@ export const Translations = {
         semanaAtunBanner: 'Entdecken Sie unsere Thunfisch-Woche',
 
         // Story View
-        storyHeroTitle: 'La Flamenca',
+        storyHeroTitle: 'Che Bar',
         storyHeroSubtitle: 'Vibes & Bites',
         storyText: 'Mehr als eine Strandbar, wir sind ein Lebensstil. Im Sand geboren, von der Sonne aufgezogen. Hier ist die einzige Regel zu genießen.',
 
@@ -551,13 +554,14 @@ export const Translations = {
         allergen_mostaza: 'Senf',
 
         // Categories
-        cat_desayunos: 'Frühstück',
-        cat_entrantes: 'Vorspeisen',
-        cat_principales: 'Hauptgerichte',
-        cat_postres: 'Desserts',
+        cat_aperitivos: 'Aperitifs',
+        cat_en_pan: 'Im Brot',
+        cat_nachos: 'Nachos',
+        cat_papas_horneadas: 'Ofenkartoffeln',
+        cat_birras_artesanas: 'Craft-Biere',
         cat_bebidas: 'Getränke',
         cat_vinos: 'Weine',
-        cat_el_trebol: 'La Flamenca Spezialitäten',
+        cat_el_trebol: 'Che Bar Spezialitäten',
         cat_semana_atun: 'Thunfisch-Woche',
 
         // Menu Items
@@ -580,7 +584,7 @@ export const Translations = {
         product_p2_desc: 'Premium gegrilltes Lachsfilet, serviert mit wildem Spargel, Babykartoffeln und einer sanften Dill-Zitronen-Sauce.',
         product_p3_title: 'Pilz-Trüffel-Risotto',
         product_p3_desc: 'Cremiger Carnaroli-Reis gekocht mit Steinpilzen, Waldpilzen und verfeinert mit schwarzem Trüffelöl und Parmesan.',
-        product_p4_title: 'Gourmet-Burger "Pure Beach"',
+        product_p4_title: 'Gourmet-Burger "Che Bar"',
         product_p4_desc: '200g gereiftes Rindfleisch, geschmolzener Cheddar, karamellisierte Zwiebeln, knuspriger Speck und unsere geheime Sauce auf Brioche-Brötchen.',
         product_p5_title: 'Geschmorte Iberische Bäckchen',
         product_p5_desc: 'Iberische Schweinebäckchen, 4 Stunden in Rotwein geschmort, begleitet von Süßkartoffelpüree.',
@@ -644,7 +648,7 @@ export const Translations = {
         pairing_desc_p5: 'Liebe auf kleiner Flamme. Tiefe Aromen, die sich Zeit genommen haben, sich kennenzulernen und Sie zu verlieben.',
 
         // Allergen Info
-        allergenInfoText: 'Bei La Flamenca liegt uns Ihr Wohlbefinden am Herzen. Wir haben diesen Allergenfilter vorbereitet, damit Sie unsere Küche in aller Ruhe genießen können.',
+        allergenInfoText: 'Bei Che Bar liegt uns Ihr Wohlbefinden am Herzen. Wir haben diesen Allergenfilter vorbereitet, damit Sie unsere Küche in aller Ruhe genießen können.',
         call: 'Anrufen',
         navigate: 'Navigieren',
 

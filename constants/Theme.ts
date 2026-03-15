@@ -1,20 +1,20 @@
 import { Platform, TextStyle } from 'react-native';
 
 export const Colors = {
-    // Andalusian Palette
-    background: '#FFFFFF', // White washed walls
-    surface: '#FDFBF7', // Warm off-white
-    primary: '#fc0103', // Red
-    primaryDark: '#c50102',
-    secondary: '#F7B500', // Albero Yellow
-    secondaryDark: '#C49000',
-    accent: '#AC162C', // Almagra Red
-    text: '#2D1A13', // Dark Wood for text
-    textSecondary: '#5D4037',
-    border: '#E2E8F0',
-    error: '#EF4444',
-    success: '#fc0103',
-    overlay: 'rgba(252, 1, 3, 0.6)', // Dark red overlay
+    // Minimalist Grayscale Palette
+    background: '#FFFFFF', // Pure white
+    surface: '#F5F5F5', // Light gray surface
+    primary: '#171717', // Near black
+    primaryDark: '#0A0A0A', // Black
+    secondary: '#525252', // Medium gray
+    secondaryDark: '#404040', // Dark gray
+    accent: '#262626', // Darker gray
+    text: '#171717', // Near black for primary text
+    textSecondary: '#737373', // Light gray for secondary text
+    border: '#E5E5E5', // Light gray border
+    error: '#EF4444', 
+    success: '#10B981', 
+    overlay: 'rgba(0, 0, 0, 0.6)', // Black overlay
 };
 
 export const LightColors = {

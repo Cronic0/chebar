@@ -1,4 +1,4 @@
-# 🚀 Guía de Despliegue y Arquitectura - El Trébol
+# 🚀 Guía de Despliegue y Arquitectura - Che Bar
 
 ## 📋 Situación Actual vs. Necesidades
 
@@ -31,7 +31,7 @@ Para tu modelo de negocio (QR → Web + Admin Panel):
 │              FRONTEND WEB                            │
 │  - React (Expo Web)                                 │
 │  - Desplegado en Coolify/VPS                        │
-│  - Accesible vía dominio: menu.eltrebol.com        │
+│  - Accesible vía dominio: menu.chebar.com        │
 └───────────────┬─────────────────────────────────────┘
                 │
                 │ HTTP Requests
@@ -223,7 +223,7 @@ firebase deploy
 ```
 
 ### Paso 5: Generar QR (5 min)
-- URL: https://eltrebol-app.web.app
+- URL: https://chebar-app.web.app
 - Generar QR → Imprimir en mesas
 
 **TOTAL: ~4 horas de trabajo**
@@ -236,8 +236,8 @@ firebase deploy
 restaurants/
   └─ {restaurantId}/
       ├─ info/
-      │   ├─ name: "El Trébol"
-      │   ├─ email: "info@eltrebol.com"
+      │   ├─ name: "Che Bar"
+      │   ├─ email: "info@chebar.com"
       │   └─ address: "..."
       │
       ├─ products/
@@ -296,13 +296,13 @@ CMD ["npm", "start"]
 
 ```
 Producción:
-- Menú Web: https://menu.eltrebol.com
-- Admin Panel: https://menu.eltrebol.com/admin
-- API: https://api.eltrebol.com
+- Menú Web: https://menu.chebar.com
+- Admin Panel: https://menu.chebar.com/admin
+- API: https://api.chebar.com
 
 QR en mesas:
-- Mesa 1: https://menu.eltrebol.com?table=1
-- Mesa 2: https://menu.eltrebol.com?table=2
+- Mesa 1: https://menu.chebar.com?table=1
+- Mesa 2: https://menu.chebar.com?table=2
 ```
 
 ---

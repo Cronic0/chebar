@@ -184,7 +184,7 @@ export default function ProductDetailScreen() {
                 {/* Off Menu Badge */}
                 {item.isOffMenu && (
                     <LinearGradient
-                        colors={['#fc0103', '#c50102']}
+                        colors={['#525252', '#262626']}
                         start={{ x: 0, y: 0 }}
                         end={{ x: 1, y: 1 }}
                         style={styles.offMenuBadge}
@@ -555,7 +555,7 @@ const styles = StyleSheet.create({
     },
     unavailableOverlay: {
         ...StyleSheet.absoluteFillObject,
-        backgroundColor: 'rgba(252, 1, 3, 0.4)', // Green tint
+        backgroundColor: 'rgba(0, 0, 0, 0.6)', // Dark gray tint
         zIndex: 1,
     },
     unavailableProductBadge: {

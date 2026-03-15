@@ -3,7 +3,7 @@ export interface MenuItem {
     title: string;
     description: string;
     price: number;
-    category: 'desayunos' | 'entrantes' | 'principales' | 'postres' | 'bebidas' | 'vinos' | 'semana-atun';
+    category: 'aperitivos' | 'en-pan' | 'nachos' | 'papas-horneadas' | 'bebidas' | 'vinos' | 'birras-artesanas' | 'semana-atun';
     image: string;
     allergens: string[];
     pairing?: string;
@@ -17,23 +17,24 @@ export interface MenuItem {
 }
 
 export const CATEGORIES = [
-    { id: 'el-trebol', title: 'La Flamenca', icon: 'home' },
-    { id: 'desayunos', title: 'Desayunos', icon: 'coffee' },
-    { id: 'entrantes', title: 'Entrantes', icon: 'silverware-fork-knife' },
-    { id: 'principales', title: 'Principales', icon: 'food-steak' },
-    { id: 'postres', title: 'Postres', icon: 'cupcake' },
+    { id: 'el-trebol', title: 'Che Bar', icon: 'home' },
+    { id: 'aperitivos', title: 'Aperitivos', icon: 'food-variant' },
+    { id: 'en-pan', title: 'En Pan', icon: 'hamburger' },
+    { id: 'nachos', title: 'Nachos', icon: 'pizza' },
+    { id: 'papas-horneadas', title: 'Papas Horneadas', icon: 'potato' },
+    { id: 'birras-artesanas', title: 'Birras Artesanas', icon: 'glass-mug-variant' },
     { id: 'vinos', title: 'Vinos', icon: 'glass-wine' },
     { id: 'bebidas', title: 'Bebidas', icon: 'glass-cocktail' },
 ];
 
 export const MENU_ITEMS: MenuItem[] = [
-    // --- DESAYUNOS (5) ---
+    // --- APERITIVOS (5) ---
     {
         id: 'd1',
         title: 'Tostada de Aguacate y Huevo',
         description: 'Pan de masa madre tostado con aguacate cremoso, huevo poché, tomate cherry y un toque de aceite de oliva virgen extra.',
         price: 8.50,
-        category: 'desayunos',
+        category: 'aperitivos',
         image: 'https://images.unsplash.com/photo-1525351484163-7529414344d8?q=80&w=800&auto=format&fit=crop',
         allergens: ['Gluten', 'Huevos'],
     },
@@ -42,7 +43,7 @@ export const MENU_ITEMS: MenuItem[] = [
         title: 'Croissant Relleno de Jamón y Queso',
         description: 'Croissant artesanal recién horneado, relleno de jamón ibérico y queso fundido, acompañado de mermelada casera.',
         price: 6.50,
-        category: 'desayunos',
+        category: 'aperitivos',
         image: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?q=80&w=800&auto=format&fit=crop',
         allergens: ['Gluten', 'Lácteos'],
     },
@@ -51,7 +52,7 @@ export const MENU_ITEMS: MenuItem[] = [
         title: 'Bowl de Yogur y Granola',
         description: 'Yogur griego natural con granola casera, frutos rojos frescos, miel de flores y semillas de chía.',
         price: 7.00,
-        category: 'desayunos',
+        category: 'aperitivos',
         image: 'https://images.unsplash.com/photo-1488477181946-6428a0291777?q=80&w=800&auto=format&fit=crop',
         allergens: ['Lácteos', 'Frutos secos'],
     },
@@ -60,7 +61,7 @@ export const MENU_ITEMS: MenuItem[] = [
         title: 'Tortilla Española Clásica',
         description: 'Tortilla de patatas artesanal jugosa por dentro, servida con pan tostado y tomate rallado.',
         price: 6.00,
-        category: 'desayunos',
+        category: 'aperitivos',
         image: 'https://images.unsplash.com/photo-1608039829572-78524f79c4c7?q=80&w=800&auto=format&fit=crop',
         allergens: ['Huevos', 'Gluten'],
     },
@@ -69,18 +70,18 @@ export const MENU_ITEMS: MenuItem[] = [
         title: 'Pancakes con Sirope de Arce',
         description: 'Torre de pancakes esponjosos con mantequilla, sirope de arce puro canadiense y frutos rojos del bosque.',
         price: 9.00,
-        category: 'desayunos',
+        category: 'aperitivos',
         image: 'https://images.unsplash.com/photo-1528207776546-365bb710ee93?q=80&w=800&auto=format&fit=crop',
         allergens: ['Gluten', 'Huevos', 'Lácteos'],
     },
 
-    // --- ENTRANTES (5) ---
+    // --- EN PAN (5) ---
     {
         id: 'e1',
         title: 'Croquetas de Jamón Ibérico',
         description: 'Cremosas croquetas caseras elaboradas con bechamel suave y virutas de jamón ibérico de bellota 100%.',
         price: 12.50,
-        category: 'entrantes',
+        category: 'en-pan',
         image: 'https://images.unsplash.com/photo-1626645738196-c2a7c87a8f58?q=80&w=800&auto=format&fit=crop',
         allergens: ['Gluten', 'Lácteos', 'Huevos'],
         pairing: 'v4',
@@ -90,7 +91,7 @@ export const MENU_ITEMS: MenuItem[] = [
         title: 'Ensalada de Burrata y Pesto',
         description: 'Burrata fresca D.O.P. servida sobre una cama de rúcula, tomates cherry confitados y nuestro pesto genovés casero.',
         price: 14.50,
-        category: 'entrantes',
+        category: 'en-pan',
         image: 'https://images.unsplash.com/photo-1452195100486-9cc805987862?q=80&w=800&auto=format&fit=crop',
         allergens: ['Lácteos', 'Frutos secos'],
     },
@@ -99,7 +100,7 @@ export const MENU_ITEMS: MenuItem[] = [
         title: 'Pulpo a la Brasa',
         description: 'Pata de pulpo cocida a baja temperatura y terminada a la brasa, acompañada de puré de patata trufado y pimentón de la Vera.',
         price: 18.00,
-        category: 'entrantes',
+        category: 'en-pan',
         image: 'https://images.unsplash.com/photo-1565557623262-b51c2513a641?q=80&w=800&auto=format&fit=crop',
         allergens: ['Moluscos', 'Lácteos'],
         pairing: 'v2',
@@ -109,7 +110,7 @@ export const MENU_ITEMS: MenuItem[] = [
         title: 'Tartar de Atún Rojo',
         description: 'Dados de atún rojo fresco marinados en soja y jengibre, con aguacate, sésamo tostado y un toque de wasabi.',
         price: 16.50,
-        category: 'entrantes',
+        category: 'en-pan',
         image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=800&auto=format&fit=crop',
         allergens: ['Pescado', 'Soja', 'Sésamo'],
     },
@@ -118,19 +119,19 @@ export const MENU_ITEMS: MenuItem[] = [
         title: 'Tabla de Quesos Artesanos',
         description: 'Selección de 5 quesos nacionales e internacionales, acompañados de mermelada de higos, nueces y uvas.',
         price: 15.00,
-        category: 'entrantes',
+        category: 'en-pan',
         image: 'https://images.unsplash.com/photo-1452195100486-9cc805987862?q=80&w=800&auto=format&fit=crop',
         allergens: ['Lácteos', 'Frutos secos', 'Gluten'],
         pairing: 'v1',
     },
 
-    // --- PRINCIPALES (5) ---
+    // --- NACHOS (5) ---
     {
         id: 'p1',
         title: 'Solomillo al Foie',
         description: 'Tierno solomillo de ternera gallega a la parrilla, coronado con escalope de foie fresco y reducción de Pedro Ximénez.',
         price: 26.00,
-        category: 'principales',
+        category: 'nachos',
         image: 'https://images.unsplash.com/photo-1600891964092-4316c288032e?q=80&w=800&auto=format&fit=crop',
         allergens: ['Lácteos', 'Sulfitos'],
         pairing: 'v3',
@@ -140,7 +141,7 @@ export const MENU_ITEMS: MenuItem[] = [
         title: 'Salmón Noruego al Eneldo',
         description: 'Lomo de salmón premium a la plancha, servido con espárragos trigueros, patatas baby y una suave salsa de eneldo y limón.',
         price: 21.50,
-        category: 'principales',
+        category: 'nachos',
         image: 'https://images.unsplash.com/photo-1611250188496-e966043a0629?w=800&q=80',
         allergens: ['Pescado', 'Lácteos'],
         pairing: 'v2',
@@ -150,7 +151,7 @@ export const MENU_ITEMS: MenuItem[] = [
         title: 'Risotto de Setas y Trufa',
         description: 'Arroz Carnaroli cremoso cocinado con boletus edulis, champiñones silvestres y terminado con aceite de trufa negra y parmesano.',
         price: 18.50,
-        category: 'principales',
+        category: 'nachos',
         image: 'https://images.unsplash.com/photo-1476124369491-e7addf5db371?q=80&w=800&auto=format&fit=crop',
         allergens: ['Lácteos', 'Sulfitos'],
         pairing: 'v1',
@@ -160,7 +161,7 @@ export const MENU_ITEMS: MenuItem[] = [
         title: 'Hamburguesa Gourmet "V.Cotin"',
         description: '200g de carne de vaca madurada, queso cheddar fundido, cebolla caramelizada, bacon crujiente y nuestra salsa secreta en pan brioche.',
         price: 16.00,
-        category: 'principales',
+        category: 'nachos',
         image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=800&auto=format&fit=crop',
         allergens: ['Gluten', 'Lácteos', 'Huevos', 'Mostaza'],
         pairing: 'b3',
@@ -170,19 +171,19 @@ export const MENU_ITEMS: MenuItem[] = [
         title: 'Carrillada Ibérica Estofada',
         description: 'Carrilleras de cerdo ibérico cocinadas a fuego lento en vino tinto durante 4 horas, acompañadas de puré de boniato.',
         price: 19.00,
-        category: 'principales',
+        category: 'nachos',
         image: 'https://images.unsplash.com/photo-1600891964092-4316c288032e?q=80&w=800&auto=format&fit=crop',
         allergens: ['Sulfitos', 'Lácteos'],
         pairing: 'v3',
     },
 
-    // --- POSTRES (5) ---
+    // --- PAPAS HORNEADAS (5) ---
     {
         id: 'po1',
         title: 'Tarta de Queso al Horno',
         description: 'Nuestra versión de la tarta de queso vasca, cremosa por dentro y tostada por fuera, servida con coulis de frutos rojos.',
         price: 7.50,
-        category: 'postres',
+        category: 'papas-horneadas',
         image: 'https://images.unsplash.com/photo-1533134242443-d4fd215305ad?q=80&w=800&auto=format&fit=crop',
         allergens: ['Lácteos', 'Huevos', 'Gluten'],
     },
@@ -191,7 +192,7 @@ export const MENU_ITEMS: MenuItem[] = [
         title: 'Coulant de Chocolate',
         description: 'Volcán de chocolate negro 70% con interior fundido, acompañado de una bola de helado de vainilla de Madagascar.',
         price: 8.00,
-        category: 'postres',
+        category: 'papas-horneadas',
         image: 'https://images.unsplash.com/photo-1606313564200-e75d5e30476c?q=80&w=800&auto=format&fit=crop',
         allergens: ['Gluten', 'Huevos', 'Lácteos', 'Soja'],
     },
@@ -200,7 +201,7 @@ export const MENU_ITEMS: MenuItem[] = [
         title: 'Tiramisú Clásico',
         description: 'El auténtico postre italiano con bizcochos savoiardi empapados en café espresso, crema de mascarpone y cacao puro.',
         price: 7.00,
-        category: 'postres',
+        category: 'papas-horneadas',
         image: 'https://images.unsplash.com/photo-1571875257727-256c39da42af?q=80&w=800&auto=format&fit=crop',
         allergens: ['Gluten', 'Huevos', 'Lácteos'],
     },
@@ -209,7 +210,7 @@ export const MENU_ITEMS: MenuItem[] = [
         title: 'Sorbete de Limón al Cava',
         description: 'Refrescante sorbete de limón batido con cava brut nature y un toque de hierbabuena fresca.',
         price: 6.50,
-        category: 'postres',
+        category: 'papas-horneadas',
         image: 'https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?q=80&w=800&auto=format&fit=crop',
         allergens: ['Sulfitos'],
     },
@@ -218,7 +219,7 @@ export const MENU_ITEMS: MenuItem[] = [
         title: 'Brownie con Nueces',
         description: 'Denso y húmedo brownie de chocolate con nueces, servido caliente con nata montada y sirope de chocolate.',
         price: 7.50,
-        category: 'postres',
+        category: 'papas-horneadas',
         image: 'https://images.unsplash.com/photo-1564355808539-22fda35bed7e?q=80&w=800&auto=format&fit=crop',
         allergens: ['Gluten', 'Huevos', 'Lácteos', 'Frutos secos'],
     },
@@ -247,7 +248,7 @@ export const MENU_ITEMS: MenuItem[] = [
         title: 'Cerveza Artesana IPA',
         description: 'Cerveza artesanal estilo India Pale Ale, con notas cítricas y amargor equilibrado.',
         price: 4.50,
-        category: 'bebidas',
+        category: 'birras-artesanas',
         image: 'https://images.unsplash.com/photo-1566633806327-68e152aaf26d?q=80&w=800&auto=format&fit=crop',
         allergens: ['Gluten'],
     },

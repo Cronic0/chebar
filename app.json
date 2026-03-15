@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "GastroCode Demo",
-    "slug": "gastrocode-pure-beach",
+    "name": "Che Bar App",
+    "slug": "che-bar-app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",

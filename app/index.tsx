@@ -55,7 +55,7 @@ export default function LandingPage() {
     return (
         <View style={styles.container}>
             <ImageBackground
-                source={require('@/assets/andalusian_patio.png')}
+                source={require('@/assets/portada1.jpg')}
                 style={styles.background}
                 resizeMode="cover"
             >
@@ -75,7 +75,7 @@ export default function LandingPage() {
                             <Animated.View style={[styles.titleContainer, titleStyle]}>
 
                                 <Text style={styles.welcomeText}>{t('welcome')}</Text>
-                                <Text style={styles.mainTitle}>La Flamenca</Text>
+                                <Text style={styles.mainTitle}>Che Bar</Text>
                                 <Text style={styles.mainTitleAccent}>Tapas Bar</Text>
                                 <View style={styles.separator} />
                                 <Text style={styles.tagline}>Tradición que se come con el alma</Text>
@@ -198,7 +198,7 @@ const styles = StyleSheet.create({
         fontSize: 52,
         lineHeight: 60,
         textAlign: 'center',
-        color: '#df2020ff', // Warmer Gold
+        color: '#A3A3A3', // Light Gray Accent
         fontStyle: 'italic',
         textShadowColor: 'rgba(0,0,0,0.9)',
         textShadowOffset: { width: 2, height: 2 },

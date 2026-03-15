@@ -99,7 +99,7 @@ const NewsletterSection = () => {
     return (
         <View style={styles.newsletterContainer}>
             <LinearGradient
-                colors={['rgba(252, 1, 3, 0.1)', 'rgba(252, 1, 3, 0.05)']}
+                colors={['rgba(23, 23, 23, 0.1)', 'rgba(23, 23, 23, 0.05)']}
                 style={styles.newsletterGradient}
             >
                 {isSubmitted ? (
@@ -611,7 +611,7 @@ const StoryView = ({ onScroll }: { onScroll: (event: any) => void }) => {
                                 <View style={{ alignItems: 'center', gap: 4 }}>
                                     <Text style={styles.widgetLabel}>{t('reservations')}</Text>
                                     <Text style={{ fontSize: 11, color: Colors.textSecondary, fontWeight: '500' }}>
-                                        info@eltrebol.com
+                                        info@chebar.com
                                     </Text>
                                 </View>
                             </Pressable>
@@ -641,14 +641,16 @@ const StoryView = ({ onScroll }: { onScroll: (event: any) => void }) => {
 // Helper function to get category background image
 const getCategoryImage = (categoryId: string): string => {
     const categoryImages: { [key: string]: string } = {
-        'entrantes': 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?q=80&w=1000&auto=format&fit=crop',
-        'principales': 'https://images.unsplash.com/photo-1600891964092-4316c288032e?q=80&w=1000&auto=format&fit=crop',
-        'postres': 'https://images.unsplash.com/photo-1551024506-0bccd828d307?q=80&w=1000&auto=format&fit=crop',
+        'aperitivos': 'https://images.unsplash.com/photo-1525351484163-7529414344d8?q=80&w=1000&auto=format&fit=crop',
+        'en-pan': 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=1000&auto=format&fit=crop',
+        'nachos': 'https://images.unsplash.com/photo-1513456852971-30c0b8199d4d?q=80&w=1000&auto=format&fit=crop',
+        'papas-horneadas': 'https://images.unsplash.com/photo-1505253716362-afaea1defd54?q=80&w=1000&auto=format&fit=crop',
+        'birras-artesanas': 'https://images.unsplash.com/photo-1566633806327-68e152aaf26d?q=80&w=1000&auto=format&fit=crop',
         'vinos': 'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?q=80&w=1000&auto=format&fit=crop',
         'bebidas': 'https://images.unsplash.com/photo-1514933651103-005eec06c04b?q=80&w=1000&auto=format&fit=crop',
         'semana-atun': 'https://images.unsplash.com/photo-1611250188496-e966043a0629?q=80&w=1000&auto=format&fit=crop',
     };
-    return categoryImages[categoryId] || categoryImages['principales'];
+    return categoryImages[categoryId] || categoryImages['aperitivos'];
 };
 
 export default function MenuScreen() {
@@ -723,7 +725,7 @@ export default function MenuScreen() {
     return (
         <View style={styles.container}>
             <ImageBackground
-                source={require('@/assets/fla.jpg')}
+                source={require('@/assets/portada2.webp')}
                 style={styles.background}
                 resizeMode="cover"
             >
@@ -1094,11 +1096,11 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        backgroundColor: 'rgba(252, 1, 3, 0.08)',
+        backgroundColor: 'rgba(23, 23, 23, 0.08)',
         padding: Spacing.m,
         borderRadius: 12,
         borderWidth: 1,
-        borderColor: 'rgba(252, 1, 3, 0.2)',
+        borderColor: 'rgba(23, 23, 23, 0.2)',
     },
     allergenBannerContent: {
         flexDirection: 'row',
@@ -1252,7 +1254,7 @@ const styles = StyleSheet.create({
         width: 48,
         height: 48,
         borderRadius: 24,
-        backgroundColor: 'rgba(252, 1, 3, 0.1)',
+        backgroundColor: 'rgba(23, 23, 23, 0.1)',
         justifyContent: 'center',
         alignItems: 'center',
         marginBottom: 4,
@@ -1404,7 +1406,7 @@ const styles = StyleSheet.create({
         borderRadius: 24,
         overflow: 'hidden',
         borderWidth: 1,
-        borderColor: 'rgba(252, 1, 3, 0.2)',
+        borderColor: 'rgba(23, 23, 23, 0.2)',
     },
     newsletterGradient: {
         padding: Spacing.l,
@@ -1633,7 +1635,7 @@ const styles = StyleSheet.create({
         borderRadius: 12,
         alignItems: 'center',
         borderWidth: 1,
-        borderColor: 'rgba(252, 1, 3, 0.2)',
+        borderColor: 'rgba(23, 23, 23, 0.2)',
     },
     closeButtonText: {
         color: Colors.primary,

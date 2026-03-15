@@ -106,7 +106,7 @@ export default function SplashScreen({ onFinish }: SplashScreenProps) {
 
                 {/* Restaurant Name */}
                 <Animated.View style={textStyle}>
-                    <Text style={styles.restaurantName}>La Flamenca</Text>
+                    <Text style={styles.restaurantName}>Che Bar</Text>
                     <Text style={styles.slogan}>Sabores que conquistan</Text>
                 </Animated.View>
 

@@ -22,9 +22,11 @@ const ALLERGEN_LIST = [
 ];
 
 const CATEGORIES = [
-    { id: 'entrantes', label: 'Entrantes', icon: 'food-variant' },
-    { id: 'principales', label: 'Principales', icon: 'silverware-fork-knife' },
-    { id: 'postres', label: 'Postres', icon: 'cupcake' },
+    { id: 'aperitivos', label: 'Aperitivos', icon: 'food-variant' },
+    { id: 'en-pan', label: 'En Pan', icon: 'hamburger' },
+    { id: 'nachos', label: 'Nachos', icon: 'pizza' },
+    { id: 'papas-horneadas', label: 'Papas Horneadas', icon: 'potato' },
+    { id: 'birras-artesanas', label: 'Birras Artesanas', icon: 'glass-mug-variant' },
     { id: 'bebidas', label: 'Bebidas', icon: 'cup' },
     { id: 'vinos', label: 'Vinos', icon: 'glass-wine' },
 ];

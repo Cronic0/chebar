@@ -1,6 +1,6 @@
-# 💃 Flamenca Bar-Tapas - Interactive Menu App
+# 🥩 Che Bar - Interactive Menu App
 
-Una experiencia digital moderna para **Flamenca Bar-Tapas**, construida con React Native y Expo. Esta aplicación transforma la carta tradicional en una experiencia interactiva, potenciada por la tecnología de **GastroCode**.
+Una experiencia digital moderna para **Che Bar**, construido con React Native y Expo. Esta aplicación transforma la carta tradicional en una experiencia interactiva. ¡Las mejores tapas y empanadas argentinas en la playa de La Barrosa, Chiclana!
 
 ## ✨ Características Principales
 
@@ -37,10 +37,10 @@ Esta aplicación está impulsada por **GastroCode**, nuestra plataforma de gesti
 
 ```bash
 # Clonar el repositorio
-git clone https://github.com/Cronic0/flamenca.git
+git clone https://github.com/Cronic0/chebar.git
 
 # Ir al directorio del proyecto
-cd flamenca
+cd chebar
 
 # Instalar dependencias
 npm install
@@ -87,15 +87,15 @@ npm run web
 ## 📁 Estructura del Proyecto
 
 ```
-El_TREBOL_APP/
+CHE_BAR_APP/
 ├── app/                    # Pantallas de la aplicación
 │   ├── admin/             # Panel de administración
 │   ├── menu/              # Menú y detalles de productos
 │   ├── allergens.tsx      # Filtro de alérgenos
 │   ├── favorites.tsx      # Productos favoritos
-│   ├── gastrocode.tsx     # Landing page de la tecnología GastroCode
+│   ├── gastrocode.tsx     # Landing page
 │   ├── semana-del-atun.tsx # Sección especial de evento
-│   └── index.tsx          # Landing page principal (Flamenca)
+│   └── index.tsx          # Landing page principal (Che Bar)
 ├── components/            # Componentes reutilizables
 ├── constants/             # Constantes, temas y traducciones
 ├── context/              # Estado global (Admin, Idioma, Favoritos, Analytics)
@@ -113,8 +113,8 @@ Desde el panel de administración puedes activar secciones temáticas:
 
 ## 📧 Contacto y Soporte
 
-- **Soporte Técnico**: gastrocodeapp@gmail.com
-- **Restaurante**: info@flamencabartapas.com
+- **Soporte Técnico**: info@chebar.com
+- **Restaurante**: info@chebar.com
 
 
 **Powered by GastroCode con ❤️** - *Digitalizando la hostelería con alma.*
