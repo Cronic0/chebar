@@ -1,6 +1,6 @@
 import { ModernProductCard } from '@/components/ModernProductCard';
 import { Colors, Shadows, Spacing, Typography } from '@/constants/Theme';
-import { MENU_ITEMS } from '@/data/menuData';
+import { useAdmin } from '@/context/AdminContext';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Stack } from 'expo-router';
 import React, { useState } from 'react';
@@ -30,6 +30,7 @@ const ALLERGEN_ICONS: Record<string, keyof typeof MaterialCommunityIcons.glyphMa
 export default function AllergensScreen() {
     const [selectedAllergens, setSelectedAllergens] = useState<string[]>([]);
     const { t } = useLanguage();
+    const { products } = useAdmin();
 
     const toggleAllergen = (allergenKey: string) => {
         setSelectedAllergens(prev =>
@@ -40,7 +41,7 @@ export default function AllergensScreen() {
     };
 
     // Filter items: Exclude items that contain ANY of the selected allergens
-    const filteredItems = MENU_ITEMS.filter(item => {
+    const filteredItems = products.filter((item: any) => {
         if (selectedAllergens.length === 0) return true;
 
         const keyToSpanish: Record<string, string> = {
@@ -58,7 +59,7 @@ export default function AllergensScreen() {
 
         const selectedSpanishAllergens = selectedAllergens.map(key => keyToSpanish[key]);
 
-        const hasAllergen = item.allergens.some(allergen => selectedSpanishAllergens.includes(allergen));
+        const hasAllergen = (item.allergens || []).some((allergen: string) => selectedSpanishAllergens.includes(allergen));
         return !hasAllergen;
     });
 
