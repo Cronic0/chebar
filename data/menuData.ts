@@ -22,7 +22,7 @@ export const CATEGORIES = [
     { id: 'aperitivos', title: 'Aperitivos', icon: 'food-variant' },
     { id: 'en-pan', title: 'En Pan', icon: 'hamburger' },
     { id: 'nachos', title: 'Nachos', icon: 'pizza' },
-    { id: 'papas-horneadas', title: 'Papas Horneadas', icon: 'potato' },
+    { id: 'papas-horneadas', title: 'Papas Horneadas', icon: 'french-fries' },
     { id: 'birras-artesanas', title: 'Birras Artesanas', icon: 'glass-mug-variant' },
     { id: 'vinos', title: 'Vinos', icon: 'glass-wine' },
     { id: 'bebidas', title: 'Bebidas', icon: 'glass-cocktail' },

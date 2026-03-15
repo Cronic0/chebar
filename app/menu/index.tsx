@@ -382,9 +382,10 @@ const StoryView = ({ onScroll }: { onScroll: (event: any) => void }) => {
                                         <Link href={bannerConfig.linkPath as any} asChild>
                                             <Pressable>
                                                 <ImageBackground
+                                                    key={bannerConfig.imageUrl}
                                                     source={{ uri: bannerConfig.imageUrl }}
                                                     style={styles.tunaBanner}
-                                                    imageStyle={{ borderRadius: 16 }}
+                                                    imageStyle={{ resizeMode: 'cover' }}
                                                 >
                                                     <LinearGradient
                                                         colors={[`rgba(255,255,255,${bannerConfig.whiteOverlayOpacity ?? 0})`, `rgba(0,0,0,${bannerConfig.darkOverlayOpacity ?? 0.7})`]}
@@ -399,9 +400,10 @@ const StoryView = ({ onScroll }: { onScroll: (event: any) => void }) => {
                                     ) : (
                                         <Pressable>
                                             <ImageBackground
+                                                key={bannerConfig.imageUrl}
                                                 source={{ uri: bannerConfig.imageUrl }}
                                                 style={styles.tunaBanner}
-                                                imageStyle={{ borderRadius: 16 }}
+                                                imageStyle={{ resizeMode: 'cover' }}
                                             >
                                                 <LinearGradient
                                                     colors={[`rgba(255,255,255,${bannerConfig.whiteOverlayOpacity ?? 0})`, `rgba(0,0,0,${bannerConfig.darkOverlayOpacity ?? 0.7})`]}
@@ -440,9 +442,10 @@ const StoryView = ({ onScroll }: { onScroll: (event: any) => void }) => {
                                         <Link href={eventConfig.linkPath as any} asChild>
                                             <Pressable>
                                                 <ImageBackground
+                                                    key={eventConfig.imageUrl}
                                                     source={{ uri: eventConfig.imageUrl }}
                                                     style={styles.tunaBanner}
-                                                    imageStyle={{ borderRadius: 16 }}
+                                                    imageStyle={{ resizeMode: 'cover' }}
                                                 >
                                                     <LinearGradient
                                                         colors={[`rgba(255,255,255,${eventConfig.whiteOverlayOpacity ?? 0})`, `rgba(0,0,0,${eventConfig.darkOverlayOpacity ?? 0.7})`]}
@@ -463,9 +466,10 @@ const StoryView = ({ onScroll }: { onScroll: (event: any) => void }) => {
                                     ) : (
                                         <Pressable>
                                             <ImageBackground
+                                                key={eventConfig.imageUrl}
                                                 source={{ uri: eventConfig.imageUrl }}
                                                 style={styles.tunaBanner}
-                                                imageStyle={{ borderRadius: 16 }}
+                                                imageStyle={{ resizeMode: 'cover' }}
                                             >
                                                 <LinearGradient
                                                     colors={[`rgba(255,255,255,${eventConfig.whiteOverlayOpacity ?? 0})`, `rgba(0,0,0,${eventConfig.darkOverlayOpacity ?? 0.7})`]}
@@ -833,20 +837,17 @@ export default function MenuScreen() {
                             style={styles.fabButton}
                             onPress={() => setIsMenuOpen(!isMenuOpen)}
                         >
-                            <LinearGradient
-                                colors={[Colors.primary, Colors.primaryDark]}
-                                style={styles.fabGradient}
-                            >
-                                {isMenuOpen ? (
+                            {isMenuOpen ? (
+                                <View style={styles.fabCloseButton}>
                                     <MaterialCommunityIcons
                                         name="close"
                                         size={32}
                                         color="#FFF"
                                     />
-                                ) : (
-                                    <Image source={require('@/assets/logo.png')} style={styles.fabLogo} />
-                                )}
-                            </LinearGradient>
+                                </View>
+                            ) : (
+                                <Image source={require('@/assets/logo.png')} style={styles.fabLogo} />
+                            )}
                         </Pressable>
                     </Animated.View>
                 </View >
@@ -1135,13 +1136,14 @@ const styles = StyleSheet.create({
     },
     // Tuna Banner
     tunaBanner: {
-        width: '100%',
-        height: 160,
+        width: Dimensions.get('window').width,
+        height: 225, // 16:9 Aspect Ratio aprox para móviles
+        marginLeft: -Spacing.l, // Contrarestar el padding del sectionContainer
         marginBottom: Spacing.m,
         justifyContent: 'center',
         alignItems: 'center',
         overflow: 'hidden',
-        borderRadius: 16,
+        backgroundColor: '#1E293B',
     },
     tunaBannerOverlay: {
         width: '100%',
@@ -1791,28 +1793,28 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     fabButton: {
+        width: 80,
+        height: 80,
+        justifyContent: 'center',
+        alignItems: 'center',
+        bottom: 5, // Moved up to add padding
+    },
+    fabCloseButton: {
         width: 50,
         height: 50,
-        borderRadius: 32,
+        borderRadius: 25,
+        backgroundColor: Colors.primary,
+        justifyContent: 'center',
+        alignItems: 'center',
         shadowColor: Colors.primary,
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.3,
         shadowRadius: 12,
         elevation: 8,
     },
-    fabGradient: {
-        width: '100%',
-        height: '100%',
-        borderRadius: 32,
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderWidth: 2,
-        borderColor: 'rgba(255,255,255,0.2)',
-    },
     fabLogo: {
-        width: 100,
-        height: 100,
+        width: 112,
+        height: 112,
         resizeMode: 'contain',
-        bottom: 10,
     },
 });

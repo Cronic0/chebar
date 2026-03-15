@@ -48,7 +48,7 @@ export const HeaderRight = () => {
             >
                 <MaterialCommunityIcons
                     name={favorites.length > 0 ? "heart" : "heart-outline"}
-                    size={28}
+                    size={34} // Increased by 20% from 28
                     color={favorites.length > 0 ? Colors.primary : LightColors.primary}
                 />
             </Pressable>
@@ -58,16 +58,16 @@ export const HeaderRight = () => {
 
 const styles = StyleSheet.create({
     langButton: {
-        paddingHorizontal: 8,
-        paddingVertical: 4,
-        borderRadius: 6,
+        paddingHorizontal: 10, // Increased by 20% from 8
+        paddingVertical: 5,   // Increased by 20% from 4
+        borderRadius: 8,      // Increased from 6 
         backgroundColor: 'rgba(0, 0, 0, 0.05)',
     },
     langButtonActive: {
         backgroundColor: Colors.primary,
     },
     langText: {
-        fontSize: 12,
+        fontSize: 14, // Increased by ~20% from 12
         fontWeight: '600',
         color: LightColors.textSecondary,
         letterSpacing: 0.5,

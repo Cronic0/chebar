@@ -26,7 +26,7 @@ export default function BannerEditScreen() {
             mediaTypes: ['images'],
             allowsEditing: true,
             aspect: [16, 9],
-            quality: 0.5,
+            quality: 0.2, // Lower quality to avoid huge base64 strings
             base64: true,
         });
 
@@ -34,7 +34,7 @@ export default function BannerEditScreen() {
             const base64Image = `data:image/jpeg;base64,${result.assets[0].base64}`;
             const sizeInBytes = result.assets[0].base64.length * 0.75;
             if (sizeInBytes > 1000000) {
-                Alert.alert('Error', 'La imagen es demasiado grande. Por favor elige una más pequeña.');
+                Alert.alert('Error', 'La imagen es demasiado grande incluso comprimida. Por favor, pega un enlace directo de internet abajo.');
                 return;
             }
             setImage(base64Image);
@@ -132,10 +132,20 @@ export default function BannerEditScreen() {
                     {/* Image Picker */}
                     <View style={styles.inputGroup}>
                         <Text style={styles.label}>Imagen del Banner *</Text>
+                        <TextInput
+                            style={[styles.input, { marginBottom: 8 }]}
+                            value={image}
+                            onChangeText={setImage}
+                            placeholder="https://ejemplo.com/imagen.jpg o pega base64..."
+                            placeholderTextColor="rgba(255,255,255,0.3)"
+                        />
+                        <Text style={[styles.helpText, { marginBottom: 12 }]}>
+                            Pega un enlace de internet (recomendado) o sube una foto comprimida:
+                        </Text>
                         <Pressable style={styles.imagePickerButton} onPress={pickImage}>
                             <MaterialCommunityIcons name="image-plus" size={24} color="#FFF" />
                             <Text style={styles.imagePickerText}>
-                                {image ? 'Cambiar Imagen' : 'Seleccionar Imagen'}
+                                {image && image.startsWith('data:') ? 'Cambiar Archivo' : 'Subir desde la Galería'}
                             </Text>
                         </Pressable>
                         {image && (
