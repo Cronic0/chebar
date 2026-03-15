@@ -7,6 +7,7 @@ export interface MenuItem {
     image: string;
     allergens: string[];
     pairing?: string;
+    formats?: { name: string; price: number }[];
 
     // Traducciones automáticas
     translations?: {
@@ -27,52 +28,104 @@ export const CATEGORIES = [
     { id: 'bebidas', title: 'Bebidas', icon: 'glass-cocktail' },
 ];
 
-export const MENU_ITEMS: MenuItem[] = [
-    // --- APERITIVOS (5) ---
+export const MENU_ITEMS: MenuItem[] = [    // --- APERITIVOS (7) ---
     {
-        id: 'd1',
-        title: 'Tostada de Aguacate y Huevo',
-        description: 'Pan de masa madre tostado con aguacate cremoso, huevo poché, tomate cherry y un toque de aceite de oliva virgen extra.',
-        price: 8.50,
+        id: 'ap1',
+        title: 'Queso',
+        description: 'Selección de quesos artesanos argentinos, curados y semicurados, servidos con pan tostado y tomates cherry.',
+        price: 4.50,
         category: 'aperitivos',
-        image: 'https://images.unsplash.com/photo-1525351484163-7529414344d8?q=80&w=800&auto=format&fit=crop',
-        allergens: ['Gluten', 'Huevos'],
+        image: 'https://images.unsplash.com/photo-1452195100486-9cc805987862?q=80&w=800&auto=format&fit=crop',
+        allergens: ['Lácteos'],
+        formats: [
+            { name: 'Tapa', price: 4.50 },
+            { name: '1/2', price: 7.00 },
+            { name: 'Plato', price: 12.00 },
+        ],
     },
     {
-        id: 'd2',
-        title: 'Croissant Relleno de Jamón y Queso',
-        description: 'Croissant artesanal recién horneado, relleno de jamón ibérico y queso fundido, acompañado de mermelada casera.',
-        price: 6.50,
+        id: 'ap2',
+        title: 'Jamón',
+        description: 'Jamón curado de primera calidad, cortado a cuchillo y servido con pan cristal y tomate rallado.',
+        price: 5.00,
         category: 'aperitivos',
-        image: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?q=80&w=800&auto=format&fit=crop',
-        allergens: ['Gluten', 'Lácteos'],
+        image: 'https://images.unsplash.com/photo-1600891964092-4316c288032e?q=80&w=800&auto=format&fit=crop',
+        allergens: [],
+        formats: [
+            { name: 'Tapa', price: 5.00 },
+            { name: '1/2', price: 8.50 },
+            { name: 'Plato', price: 14.00 },
+        ],
     },
     {
-        id: 'd3',
-        title: 'Bowl de Yogur y Granola',
-        description: 'Yogur griego natural con granola casera, frutos rojos frescos, miel de flores y semillas de chía.',
-        price: 7.00,
+        id: 'ap3',
+        title: 'Chicharrón Especial',
+        description: 'Chicharrón crujiente elaborado con receta tradicional argentina, con un toque de especias y limón.',
+        price: 5.50,
         category: 'aperitivos',
-        image: 'https://images.unsplash.com/photo-1488477181946-6428a0291777?q=80&w=800&auto=format&fit=crop',
-        allergens: ['Lácteos', 'Frutos secos'],
+        image: 'https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?q=80&w=800&auto=format&fit=crop',
+        allergens: [],
+        formats: [
+            { name: 'Tapa', price: 5.50 },
+            { name: '1/2', price: 9.00 },
+            { name: 'Plato', price: 15.00 },
+        ],
     },
     {
-        id: 'd4',
-        title: 'Tortilla Española Clásica',
-        description: 'Tortilla de patatas artesanal jugosa por dentro, servida con pan tostado y tomate rallado.',
-        price: 6.00,
+        id: 'ap4',
+        title: 'Chicharrón Frito',
+        description: 'Chicharrón frito dorado y crujiente, servido con salsa chimichurri casera.',
+        price: 5.00,
         category: 'aperitivos',
-        image: 'https://images.unsplash.com/photo-1608039829572-78524f79c4c7?q=80&w=800&auto=format&fit=crop',
-        allergens: ['Huevos', 'Gluten'],
+        image: 'https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=800&auto=format&fit=crop',
+        allergens: [],
+        formats: [
+            { name: 'Tapa', price: 5.00 },
+            { name: '1/2', price: 8.00 },
+            { name: 'Plato', price: 13.50 },
+        ],
     },
     {
-        id: 'd5',
-        title: 'Pancakes con Sirope de Arce',
-        description: 'Torre de pancakes esponjosos con mantequilla, sirope de arce puro canadiense y frutos rojos del bosque.',
-        price: 9.00,
+        id: 'ap5',
+        title: 'Butifarra de Chiclana',
+        description: 'Butifarra artesanal típica de Chiclana, a la plancha, servida con patatas y pimientos asados.',
+        price: 5.00,
         category: 'aperitivos',
-        image: 'https://images.unsplash.com/photo-1528207776546-365bb710ee93?q=80&w=800&auto=format&fit=crop',
-        allergens: ['Gluten', 'Huevos', 'Lácteos'],
+        image: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?q=80&w=800&auto=format&fit=crop',
+        allergens: ['Gluten'],
+        formats: [
+            { name: 'Tapa', price: 5.00 },
+            { name: '1/2', price: 8.50 },
+            { name: 'Plato', price: 14.00 },
+        ],
+    },
+    {
+        id: 'ap6',
+        title: 'Longaniza Picante',
+        description: 'Longaniza artesanal con un toque picante, asada a la parrilla y acompañada de pan criollo.',
+        price: 4.50,
+        category: 'aperitivos',
+        image: 'https://images.unsplash.com/photo-1625937286520-3a3d29a4091d?q=80&w=800&auto=format&fit=crop',
+        allergens: ['Gluten'],
+        formats: [
+            { name: 'Tapa', price: 4.50 },
+            { name: '1/2', price: 7.50 },
+            { name: 'Plato', price: 12.50 },
+        ],
+    },
+    {
+        id: 'ap7',
+        title: 'Chorizo Criollo',
+        description: 'Auténtico chorizo criollo argentino, asado a las brasas, jugoso y con especias tradicionales.',
+        price: 5.00,
+        category: 'aperitivos',
+        image: 'https://images.unsplash.com/photo-1623653387945-2fd25214f8fc?q=80&w=800&auto=format&fit=crop',
+        allergens: [],
+        formats: [
+            { name: 'Tapa', price: 5.00 },
+            { name: '1/2', price: 8.00 },
+            { name: 'Plato', price: 13.00 },
+        ],
     },
 
     // --- EN PAN (5) ---

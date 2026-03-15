@@ -229,8 +229,23 @@ export default function ProductDetailScreen() {
                             <Text style={styles.categoryTag}>{t(`cat_${item.category}` as any).toUpperCase()}</Text>
                             <Text style={styles.title}>{translated.title}</Text>
                         </View>
-                        <Text style={styles.price}>{item.price.toFixed(2)}€</Text>
+                        {(!item.formats || item.formats.length === 0) && (
+                            <Text style={styles.price}>{item.price.toFixed(2)}€</Text>
+                        )}
                     </View>
+
+                    {/* Format Pricing Table */}
+                    {item.formats && item.formats.length > 0 && (
+                        <View style={styles.formatsSection}>
+                            {item.formats.map((fmt, idx) => (
+                                <View key={idx} style={styles.formatRow}>
+                                    <Text style={styles.formatName}>{fmt.name}</Text>
+                                    <View style={styles.formatDots} />
+                                    <Text style={styles.formatPrice}>{fmt.price.toFixed(2)}€</Text>
+                                </View>
+                            ))}
+                        </View>
+                    )}
 
                     <View style={styles.divider} />
 
@@ -619,5 +634,34 @@ const styles = StyleSheet.create({
         fontSize: 12,
         fontWeight: 'bold',
         letterSpacing: 0.5,
+    },
+    formatsSection: {
+        marginTop: 12,
+        backgroundColor: 'rgba(0,0,0,0.03)',
+        borderRadius: 12,
+        padding: 16,
+        gap: 10,
+    },
+    formatRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    formatName: {
+        fontSize: 16,
+        fontWeight: '600',
+        color: Colors.text,
+    },
+    formatDots: {
+        flex: 1,
+        height: 1,
+        borderBottomWidth: 1,
+        borderBottomColor: 'rgba(0,0,0,0.15)',
+        borderStyle: 'dotted',
+        marginHorizontal: 8,
+    },
+    formatPrice: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: Colors.primary,
     },
 });

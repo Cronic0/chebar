@@ -62,7 +62,7 @@ const RecommendationCard = ({ item, index = 0 }: { item: any, index?: number }) 
                     )}
                     <View style={styles.recommendationContent}>
                         <Text style={styles.recommendationTitle} numberOfLines={1}>{translated.title}</Text>
-                        <Text style={styles.recommendationPrice}>{item.price.toFixed(2)}€</Text>
+                        <Text style={styles.recommendationPrice}>{item.formats && item.formats.length > 0 ? `Desde ${item.formats[0].price.toFixed(2)}` : item.price.toFixed(2)}€</Text>
                     </View>
                 </Animated.View>
             </Pressable>

@@ -45,7 +45,7 @@ export default function ProductCreateEditScreen() {
     const [description, setDescription] = useState('');
     const [price, setPrice] = useState('');
     const [image, setImage] = useState('');
-    const [category, setCategory] = useState('principales');
+    const [category, setCategory] = useState('aperitivos');
     const [allergens, setAllergens] = useState<string[]>([]);
     const [pairing, setPairing] = useState('');
     const [pairingDescription, setPairingDescription] = useState('');
@@ -58,6 +58,7 @@ export default function ProductCreateEditScreen() {
     const [isOffer, setIsOffer] = useState(false);
     const [offerText, setOfferText] = useState('');
     const [isSaving, setIsSaving] = useState(false);
+    const [formats, setFormats] = useState<{ name: string; price: string }[]>([]);
 
     useEffect(() => {
         if (existingProduct) {
@@ -76,6 +77,7 @@ export default function ProductCreateEditScreen() {
             setIsBanner(existingProduct.isBanner || false);
             setIsOffer(existingProduct.isOffer || false);
             setOfferText(existingProduct.offerText || '');
+            setFormats(existingProduct.formats?.map(f => ({ name: f.name, price: f.price.toString() })) || []);
         }
     }, [existingProduct]);
 
@@ -178,6 +180,7 @@ export default function ProductCreateEditScreen() {
             isBanner,
             isOffer,
             offerText,
+            formats: formats.filter(f => f.name.trim() && f.price.trim()).map(f => ({ name: f.name.trim(), price: parseFloat(f.price.replace(',', '.')) || 0 })),
         };
 
         console.log('Product Data to save:', productData);
@@ -353,6 +356,58 @@ export default function ProductCreateEditScreen() {
                                 placeholderTextColor="rgba(255,255,255,0.4)"
                                 keyboardType="decimal-pad"
                             />
+                        </View>
+
+                        {/* Formats Section */}
+                        <View style={styles.field}>
+                            <Text style={styles.label}>Formatos (Tapa / 1/2 / Plato)</Text>
+                            <Text style={{ color: 'rgba(255,255,255,0.5)', fontSize: 12, marginBottom: 8 }}>
+                                Opcional. Si el producto tiene varios tamaños, añade los formatos aquí.
+                            </Text>
+                            {formats.map((fmt, idx) => (
+                                <View key={idx} style={{ flexDirection: 'row', gap: 8, marginBottom: 8, alignItems: 'center' }}>
+                                    <TextInput
+                                        style={[styles.input, { flex: 2 }]}
+                                        value={fmt.name}
+                                        onChangeText={(text) => {
+                                            const updated = [...formats];
+                                            updated[idx] = { ...updated[idx], name: text };
+                                            setFormats(updated);
+                                        }}
+                                        placeholder="Ej: Tapa, 1/2, Plato"
+                                        placeholderTextColor="rgba(255,255,255,0.4)"
+                                    />
+                                    <TextInput
+                                        style={[styles.input, { flex: 1 }]}
+                                        value={fmt.price}
+                                        onChangeText={(text) => {
+                                            const updated = [...formats];
+                                            updated[idx] = { ...updated[idx], price: text };
+                                            setFormats(updated);
+                                        }}
+                                        placeholder="€"
+                                        placeholderTextColor="rgba(255,255,255,0.4)"
+                                        keyboardType="decimal-pad"
+                                    />
+                                    <Pressable
+                                        onPress={() => setFormats(formats.filter((_, i) => i !== idx))}
+                                        style={{ padding: 8 }}
+                                    >
+                                        <MaterialCommunityIcons name="close-circle" size={24} color="#ef4444" />
+                                    </Pressable>
+                                </View>
+                            ))}
+                            <Pressable
+                                style={{
+                                    flexDirection: 'row', alignItems: 'center', gap: 8,
+                                    backgroundColor: 'rgba(255,255,255,0.05)', padding: 12, borderRadius: 12,
+                                    borderWidth: 1, borderColor: 'rgba(255,255,255,0.1)', borderStyle: 'dashed',
+                                }}
+                                onPress={() => setFormats([...formats, { name: '', price: '' }])}
+                            >
+                                <MaterialCommunityIcons name="plus-circle" size={20} color={Colors.primary} />
+                                <Text style={{ color: Colors.primary, fontWeight: '600' }}>Añadir formato</Text>
+                            </Pressable>
                         </View>
 
                         <View style={styles.field}>

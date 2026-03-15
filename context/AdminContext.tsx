@@ -33,6 +33,7 @@ export interface Product {
     isBanner?: boolean;
     isOffer?: boolean;
     offerText?: string;
+    formats?: { name: string; price: number }[];
     // Translations
     translations?: {
         en?: { title: string; description: string };
@@ -201,6 +202,7 @@ export function AdminProvider({ children }: { children: ReactNode }) {
         isOffer: p.is_offer,
         offerText: p.offer_text,
         translations: p.translations,
+        formats: p.formats,
     }));
 
     const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -389,6 +391,7 @@ export function AdminProvider({ children }: { children: ReactNode }) {
                 is_offer: product.isOffer ?? false,
                 offer_text: product.offerText,
                 translations: product.translations,
+                formats: product.formats,
             };
 
             await supabaseCreateProduct(supabaseProduct as any);
@@ -413,6 +416,7 @@ export function AdminProvider({ children }: { children: ReactNode }) {
             if (updates.isOffer !== undefined) { supabaseUpdates.is_offer = updates.isOffer; delete supabaseUpdates.isOffer; }
             if (updates.offerText !== undefined) { supabaseUpdates.offer_text = updates.offerText; delete supabaseUpdates.offerText; }
             if (updates.pairingDescription !== undefined) { supabaseUpdates.pairing_description = updates.pairingDescription; delete supabaseUpdates.pairingDescription; }
+            // formats is already snake_case compatible, no mapping needed
 
             await supabaseUpdateProduct(id, supabaseUpdates);
             await refreshProducts();
